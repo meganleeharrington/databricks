@@ -1,0 +1,13 @@
+﻿kpi_name,department,definition_name,business_rule,time_basis,source_tables,governance_note
+Revenue,Finance,Net billed revenue,Invoice amount less refunds for invoices issued in period,invoice_date,Invoices,Intentionally labeled Revenue in departmental reporting
+Revenue,Sales,Closed-won ACV,Annual contract value for opportunities closed won in period,close_date,Opportunities,"Forward-looking bookings, not GAAP revenue"
+Revenue,Product,Run-rate ARR,Month-end MRR for non-churned subscriptions multiplied by 12,month_end,Subscriptions,"A run-rate, not period revenue"
+Revenue,Governed,Recognized subscription revenue,"Monthly service value attributable to the reporting period, net of refunds",service_period_end,Invoices + Subscriptions,Certified enterprise definition
+Active Customers,Finance,Recent payer,Distinct customers with a paid invoice in the trailing 90 days,payment_date,Invoices,Includes customers that may no longer use product
+Active Customers,Sales,Open account,Customer master status equals Active or Trial,snapshot_date,Customers,Includes trials and non-users
+Active Customers,Product,Engaged account,At least 3 sessions in reporting month,usage_month,Product Usage,Excludes low-frequency valid customers
+Active Customers,Governed,Paying and engaged,Active paid subscription and at least 1 session in trailing 60 days,snapshot_date,Subscriptions + Product Usage,Certified enterprise definition
+Conversion Rate,Marketing,MQL to opportunity,MQLs that created an opportunity divided by all MQLs created in cohort month,lead_created_date,Leads + Opportunities,Measures marketing handoff
+Conversion Rate,Sales,Qualified opportunity win rate,Closed-won opportunities divided by all closed opportunities in close month,close_date,Opportunities,Excludes open pipeline
+Conversion Rate,Executive,Lead-to-customer,Leads tied to a won customer divided by all leads created in cohort month,lead_created_date,Leads,End-to-end cohort outcome
+Conversion Rate,Governed,Qualified lead-to-customer,Qualified leads tied to a closed-won customer divided by qualified leads created in cohort month,lead_created_date,Leads + Opportunities,Certified enterprise definition
