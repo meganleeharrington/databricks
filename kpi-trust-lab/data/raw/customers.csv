@@ -1,0 +1,301 @@
+﻿customer_id,customer_name,industry,region,created_date,master_status,account_owner
+C0001,Company 0001,Healthcare,Midwest,2025-06-16,Active,Riley Foster
+C0002,Company 0002,Financial Services,Midwest,2025-05-25,Active,Cameron Gupta
+C0003,Company 0003,Manufacturing,Northeast,2025-10-04,Active,Riley Howard
+C0004,Company 0004,Technology,West,2026-01-04,Active,Cameron Howard
+C0005,Company 0005,Retail,Midwest,2025-08-17,Active,Riley Adams
+C0006,Company 0006,Professional Services,Northeast,2025-04-03,Active,Parker Ibrahim
+C0007,Company 0007,Retail,Midwest,2025-08-12,Churned,Taylor Foster
+C0008,Company 0008,Retail,Southeast,2025-05-14,Churned,Parker Ibrahim
+C0009,Company 0009,Retail,Midwest,2025-07-03,Trial,Morgan Howard
+C0010,Company 0010,Healthcare,Midwest,2025-07-13,Active,Quinn Ibrahim
+C0011,Company 0011,Healthcare,Midwest,2025-05-11,Active,Casey Foster
+C0012,Company 0012,Manufacturing,Midwest,2025-01-24,Active,Taylor Adams
+C0013,Company 0013,Healthcare,Southeast,2025-06-13,Active,Jordan Gupta
+C0014,Company 0014,Healthcare,Southeast,2026-02-17,Active,Jordan Adams
+C0015,Company 0015,Manufacturing,Northeast,2025-11-26,Active,Morgan Evans
+C0016,Company 0016,Technology,Midwest,2025-05-11,Churned,Parker Jones
+C0017,Company 0017,Healthcare,Northeast,2026-04-18,Trial,Morgan Brooks
+C0018,Company 0018,Technology,Midwest,2026-02-18,Churned,Reese Ibrahim
+C0019,Company 0019,Technology,Midwest,2026-01-28,Active,Taylor Ibrahim
+C0020,Company 0020,Financial Services,Northeast,2026-04-10,Active,Quinn Diaz
+C0021,Company 0021,Professional Services,Southeast,2025-01-31,Churned,Riley Diaz
+C0022,Company 0022,Technology,Southeast,2026-04-02,Active,Parker Brooks
+C0023,Company 0023,Financial Services,Midwest,2026-02-27,Active,Casey Gupta
+C0024,Company 0024,Professional Services,West,2026-03-22,Trial,Riley Chen
+C0025,Company 0025,Technology,West,2025-09-25,Active,Taylor Adams
+C0026,Company 0026,Technology,West,2026-04-25,Active,Casey Howard
+C0027,Company 0027,Technology,Northeast,2025-10-02,Churned,Jordan Ibrahim
+C0028,Company 0028,Financial Services,Midwest,2025-08-13,Active,Parker Gupta
+C0029,Company 0029,Healthcare,Southeast,2025-02-09,Active,Taylor Diaz
+C0030,Company 0030,Professional Services,Northeast,2025-09-13,Active,Riley Ibrahim
+C0031,Company 0031,Retail,Midwest,2025-03-26,Active,Casey Foster
+C0032,Company 0032,Financial Services,Midwest,2025-07-20,Active,Quinn Jones
+C0033,Company 0033,Retail,Midwest,2025-08-10,Active,Quinn Howard
+C0034,Company 0034,Manufacturing,Southeast,2025-11-19,Active,Reese Howard
+C0035,Company 0035,Retail,Southeast,2025-01-24,Churned,Cameron Jones
+C0036,Company 0036,Retail,Northeast,2026-04-29,Active,Parker Foster
+C0037,Company 0037,Technology,West,2025-05-22,Active,Avery Evans
+C0038,Company 0038,Healthcare,Northeast,2025-08-28,Active,Riley Evans
+C0039,Company 0039,Retail,West,2026-04-22,Active,Parker Brooks
+C0040,Company 0040,Healthcare,Northeast,2025-03-15,Active,Quinn Ibrahim
+C0041,Company 0041,Professional Services,West,2025-04-15,Trial,Morgan Brooks
+C0042,Company 0042,Manufacturing,Southeast,2026-03-11,Active,Reese Chen
+C0043,Company 0043,Healthcare,Southeast,2025-07-18,Active,Avery Adams
+C0044,Company 0044,Financial Services,West,2025-09-30,Churned,Cameron Chen
+C0045,Company 0045,Financial Services,Northeast,2025-06-27,Active,Cameron Chen
+C0046,Company 0046,Technology,Southeast,2025-12-25,Active,Parker Diaz
+C0047,Company 0047,Retail,Southeast,2025-12-10,Active,Reese Chen
+C0048,Company 0048,Retail,Northeast,2025-06-29,Active,Jordan Gupta
+C0049,Company 0049,Professional Services,Northeast,2025-01-10,Active,Quinn Gupta
+C0050,Company 0050,Healthcare,Southeast,2026-05-06,Active,Quinn Diaz
+C0051,Company 0051,Financial Services,Northeast,2025-08-25,Active,Casey Howard
+C0052,Company 0052,Healthcare,Southeast,2025-12-30,Active,Taylor Chen
+C0053,Company 0053,Professional Services,Northeast,2025-02-17,Active,Riley Gupta
+C0054,Company 0054,Technology,Southeast,2025-11-27,Active,Morgan Gupta
+C0055,Company 0055,Healthcare,Midwest,2025-01-12,Churned,Avery Evans
+C0056,Company 0056,Professional Services,Northeast,2025-03-13,Churned,Reese Chen
+C0057,Company 0057,Manufacturing,Midwest,2026-02-26,Active,Quinn Foster
+C0058,Company 0058,Professional Services,West,2025-06-26,Active,Reese Diaz
+C0059,Company 0059,Financial Services,Midwest,2025-02-08,Active,Morgan Howard
+C0060,Company 0060,Professional Services,Midwest,2025-04-29,Active,Casey Gupta
+C0061,Company 0061,Healthcare,Southeast,2026-04-09,Trial,Jordan Ibrahim
+C0062,Company 0062,Healthcare,Southeast,2026-04-15,Active,Riley Howard
+C0063,Company 0063,Professional Services,Southeast,2025-11-19,Active,Avery Evans
+C0064,Company 0064,Healthcare,Northeast,2026-03-23,Active,Parker Howard
+C0065,Company 0065,Manufacturing,West,2025-04-19,Active,Casey Gupta
+C0066,Company 0066,Technology,Midwest,2025-08-24,Active,Parker Gupta
+C0067,Company 0067,Professional Services,West,2025-07-23,Trial,Reese Adams
+C0068,Company 0068,Manufacturing,Northeast,2025-06-01,Active,Reese Ibrahim
+C0069,Company 0069,Professional Services,Southeast,2025-10-07,Active,Riley Jones
+C0070,Company 0070,Manufacturing,West,2025-05-27,Active,Taylor Foster
+C0071,Company 0071,Manufacturing,West,2025-03-27,Active,Parker Chen
+C0072,Company 0072,Retail,Northeast,2026-03-07,Active,Quinn Howard
+C0073,Company 0073,Retail,West,2026-05-02,Trial,Riley Brooks
+C0074,Company 0074,Professional Services,Midwest,2025-01-09,Active,Reese Chen
+C0075,Company 0075,Professional Services,Southeast,2026-03-10,Active,Cameron Evans
+C0076,Company 0076,Retail,Northeast,2025-09-02,Active,Taylor Gupta
+C0077,Company 0077,Professional Services,Midwest,2025-04-21,Active,Cameron Foster
+C0078,Company 0078,Manufacturing,Midwest,2025-05-28,Churned,Jordan Ibrahim
+C0079,Company 0079,Financial Services,Northeast,2025-06-12,Active,Reese Evans
+C0080,Company 0080,Technology,Southeast,2025-06-04,Active,Taylor Foster
+C0081,Company 0081,Technology,Southeast,2026-05-13,Active,Cameron Brooks
+C0082,Company 0082,Manufacturing,Midwest,2025-11-09,Active,Quinn Diaz
+C0083,Company 0083,Healthcare,Midwest,2025-09-20,Active,Reese Diaz
+C0084,Company 0084,Financial Services,Northeast,2026-05-01,Active,Morgan Howard
+C0085,Company 0085,Financial Services,Northeast,2026-04-26,Active,Reese Gupta
+C0086,Company 0086,Retail,Midwest,2025-02-11,Active,Cameron Diaz
+C0087,Company 0087,Technology,Southeast,2025-10-31,Active,Parker Jones
+C0088,Company 0088,Technology,West,2025-04-19,Active,Jordan Gupta
+C0089,Company 0089,Manufacturing,Southeast,2026-04-27,Trial,Riley Foster
+C0090,Company 0090,Healthcare,Southeast,2025-07-26,Trial,Avery Diaz
+C0091,Company 0091,Technology,Southeast,2025-04-06,Active,Reese Ibrahim
+C0092,Company 0092,Healthcare,Northeast,2026-04-24,Active,Cameron Evans
+C0093,Company 0093,Technology,Midwest,2025-06-09,Active,Cameron Evans
+C0094,Company 0094,Manufacturing,Southeast,2025-01-03,Active,Morgan Evans
+C0095,Company 0095,Healthcare,Midwest,2025-05-24,Churned,Reese Evans
+C0096,Company 0096,Healthcare,West,2025-12-29,Active,Avery Gupta
+C0097,Company 0097,Professional Services,Southeast,2025-04-14,Trial,Reese Gupta
+C0098,Company 0098,Technology,Midwest,2025-04-13,Active,Parker Adams
+C0099,Company 0099,Professional Services,Southeast,2025-03-29,Churned,Taylor Jones
+C0100,Company 0100,Professional Services,Northeast,2026-03-13,Active,Parker Adams
+C0101,Company 0101,Manufacturing,Southeast,2025-10-08,Active,Avery Brooks
+C0102,Company 0102,Manufacturing,West,2025-01-20,Active,Quinn Brooks
+C0103,Company 0103,Technology,Midwest,2025-09-25,Active,Jordan Gupta
+C0104,Company 0104,Professional Services,West,2026-04-15,Active,Casey Adams
+C0105,Company 0105,Retail,Midwest,2026-05-09,Active,Reese Evans
+C0106,Company 0106,Financial Services,West,2026-04-08,Active,Cameron Evans
+C0107,Company 0107,Financial Services,Midwest,2025-09-01,Trial,Casey Evans
+C0108,Company 0108,Financial Services,West,2025-02-21,Active,Quinn Diaz
+C0109,Company 0109,Healthcare,Southeast,2025-10-31,Active,Taylor Diaz
+C0110,Company 0110,Professional Services,Southeast,2025-04-21,Active,Reese Gupta
+C0111,Company 0111,Manufacturing,Southeast,2026-04-20,Active,Parker Gupta
+C0112,Company 0112,Retail,West,2026-02-28,Trial,Reese Gupta
+C0113,Company 0113,Technology,Midwest,2025-02-14,Active,Taylor Foster
+C0114,Company 0114,Professional Services,Midwest,2025-03-01,Churned,Parker Adams
+C0115,Company 0115,Retail,West,2025-06-14,Active,Cameron Brooks
+C0116,Company 0116,Retail,West,2025-06-29,Active,Cameron Diaz
+C0117,Company 0117,Financial Services,Southeast,2025-03-12,Active,Riley Brooks
+C0118,Company 0118,Healthcare,Northeast,2025-10-14,Active,Morgan Evans
+C0119,Company 0119,Financial Services,Northeast,2025-10-05,Active,Taylor Adams
+C0120,Company 0120,Retail,Southeast,2025-10-12,Churned,Parker Adams
+C0121,Company 0121,Financial Services,Southeast,2025-02-22,Active,Morgan Brooks
+C0122,Company 0122,Retail,West,2025-06-07,Churned,Jordan Chen
+C0123,Company 0123,Financial Services,Southeast,2025-08-08,Active,Parker Ibrahim
+C0124,Company 0124,Healthcare,Midwest,2025-05-23,Active,Cameron Howard
+C0125,Company 0125,Retail,Northeast,2025-12-24,Churned,Jordan Diaz
+C0126,Company 0126,Retail,Midwest,2025-01-25,Active,Casey Evans
+C0127,Company 0127,Professional Services,Southeast,2026-03-25,Active,Jordan Ibrahim
+C0128,Company 0128,Technology,West,2025-11-03,Active,Reese Chen
+C0129,Company 0129,Retail,Midwest,2025-02-07,Active,Morgan Brooks
+C0130,Company 0130,Financial Services,Southeast,2025-01-15,Active,Taylor Diaz
+C0131,Company 0131,Retail,Southeast,2025-09-07,Active,Avery Evans
+C0132,Company 0132,Professional Services,Midwest,2025-11-01,Trial,Avery Adams
+C0133,Company 0133,Technology,Northeast,2025-01-25,Trial,Avery Brooks
+C0134,Company 0134,Financial Services,Midwest,2025-09-27,Active,Parker Gupta
+C0135,Company 0135,Financial Services,Northeast,2025-05-31,Active,Jordan Evans
+C0136,Company 0136,Financial Services,Northeast,2025-10-14,Active,Riley Diaz
+C0137,Company 0137,Retail,Northeast,2026-03-30,Active,Cameron Brooks
+C0138,Company 0138,Professional Services,Northeast,2025-06-26,Active,Cameron Brooks
+C0139,Company 0139,Manufacturing,Northeast,2026-05-03,Active,Cameron Ibrahim
+C0140,Company 0140,Technology,Southeast,2026-01-22,Active,Quinn Adams
+C0141,Company 0141,Financial Services,Northeast,2026-03-28,Active,Jordan Jones
+C0142,Company 0142,Technology,West,2026-04-01,Active,Riley Jones
+C0143,Company 0143,Financial Services,Midwest,2025-01-17,Active,Avery Brooks
+C0144,Company 0144,Manufacturing,Southeast,2025-02-20,Active,Cameron Adams
+C0145,Company 0145,Manufacturing,Southeast,2025-04-06,Active,Avery Brooks
+C0146,Company 0146,Technology,West,2025-06-22,Active,Quinn Chen
+C0147,Company 0147,Financial Services,Southeast,2026-04-09,Active,Reese Evans
+C0148,Company 0148,Technology,Southeast,2026-03-15,Active,Casey Evans
+C0149,Company 0149,Technology,West,2025-07-11,Active,Cameron Evans
+C0150,Company 0150,Financial Services,Southeast,2025-04-03,Active,Reese Diaz
+C0151,Company 0151,Manufacturing,Southeast,2025-12-09,Trial,Avery Chen
+C0152,Company 0152,Healthcare,West,2025-09-23,Active,Taylor Foster
+C0153,Company 0153,Retail,Northeast,2025-02-26,Active,Taylor Diaz
+C0154,Company 0154,Financial Services,Southeast,2026-02-06,Active,Morgan Jones
+C0155,Company 0155,Financial Services,Southeast,2025-04-15,Active,Riley Chen
+C0156,Company 0156,Healthcare,West,2025-06-28,Churned,Parker Evans
+C0157,Company 0157,Professional Services,Southeast,2025-12-02,Active,Taylor Chen
+C0158,Company 0158,Professional Services,Southeast,2026-04-04,Trial,Quinn Jones
+C0159,Company 0159,Retail,West,2025-01-12,Active,Morgan Diaz
+C0160,Company 0160,Retail,Midwest,2025-04-18,Active,Cameron Jones
+C0161,Company 0161,Professional Services,West,2025-07-16,Active,Jordan Brooks
+C0162,Company 0162,Healthcare,West,2025-04-20,Active,Morgan Foster
+C0163,Company 0163,Technology,West,2026-02-19,Active,Morgan Chen
+C0164,Company 0164,Technology,Midwest,2025-08-10,Active,Riley Foster
+C0165,Company 0165,Healthcare,Northeast,2025-02-21,Trial,Morgan Brooks
+C0166,Company 0166,Manufacturing,Northeast,2025-01-09,Churned,Avery Chen
+C0167,Company 0167,Manufacturing,Midwest,2025-02-06,Active,Cameron Adams
+C0168,Company 0168,Healthcare,West,2025-05-24,Active,Cameron Adams
+C0169,Company 0169,Retail,West,2025-09-14,Active,Casey Brooks
+C0170,Company 0170,Professional Services,Southeast,2025-04-29,Trial,Reese Ibrahim
+C0171,Company 0171,Healthcare,Northeast,2025-02-11,Churned,Quinn Gupta
+C0172,Company 0172,Healthcare,Southeast,2025-08-16,Active,Quinn Diaz
+C0173,Company 0173,Financial Services,Southeast,2025-03-14,Churned,Cameron Gupta
+C0174,Company 0174,Professional Services,Midwest,2025-02-24,Churned,Morgan Ibrahim
+C0175,Company 0175,Financial Services,West,2026-02-22,Active,Cameron Ibrahim
+C0176,Company 0176,Technology,Southeast,2026-05-06,Active,Avery Ibrahim
+C0177,Company 0177,Manufacturing,Midwest,2025-12-30,Active,Parker Jones
+C0178,Company 0178,Retail,Midwest,2025-03-15,Churned,Taylor Howard
+C0179,Company 0179,Healthcare,Midwest,2025-02-11,Churned,Cameron Howard
+C0180,Company 0180,Professional Services,Midwest,2025-12-18,Trial,Riley Ibrahim
+C0181,Company 0181,Retail,Southeast,2025-09-24,Active,Taylor Evans
+C0182,Company 0182,Financial Services,Northeast,2025-04-13,Active,Jordan Howard
+C0183,Company 0183,Manufacturing,Southeast,2025-06-22,Active,Casey Diaz
+C0184,Company 0184,Financial Services,Northeast,2025-06-02,Active,Riley Adams
+C0185,Company 0185,Financial Services,Midwest,2026-03-22,Active,Parker Evans
+C0186,Company 0186,Financial Services,Midwest,2025-08-24,Active,Avery Diaz
+C0187,Company 0187,Technology,Southeast,2025-12-17,Active,Riley Ibrahim
+C0188,Company 0188,Retail,Northeast,2025-06-25,Active,Casey Ibrahim
+C0189,Company 0189,Financial Services,West,2025-07-29,Trial,Cameron Brooks
+C0190,Company 0190,Healthcare,Midwest,2025-06-02,Active,Parker Gupta
+C0191,Company 0191,Manufacturing,Northeast,2025-09-22,Active,Parker Brooks
+C0192,Company 0192,Technology,West,2025-10-26,Active,Casey Chen
+C0193,Company 0193,Professional Services,Midwest,2025-12-11,Active,Parker Diaz
+C0194,Company 0194,Retail,Midwest,2026-02-18,Active,Reese Foster
+C0195,Company 0195,Financial Services,Midwest,2026-01-25,Trial,Reese Jones
+C0196,Company 0196,Retail,Southeast,2026-02-03,Active,Casey Howard
+C0197,Company 0197,Healthcare,Southeast,2026-03-07,Active,Jordan Ibrahim
+C0198,Company 0198,Professional Services,Midwest,2025-01-14,Active,Parker Chen
+C0199,Company 0199,Healthcare,Midwest,2025-01-10,Active,Reese Evans
+C0200,Company 0200,Professional Services,Midwest,2025-08-15,Active,Riley Gupta
+C0201,Company 0201,Retail,Northeast,2025-09-21,Trial,Quinn Evans
+C0202,Company 0202,Technology,West,2025-05-20,Churned,Riley Evans
+C0203,Company 0203,Financial Services,Northeast,2026-05-05,Active,Cameron Gupta
+C0204,Company 0204,Retail,Midwest,2026-02-20,Trial,Reese Evans
+C0205,Company 0205,Professional Services,West,2025-07-11,Active,Morgan Howard
+C0206,Company 0206,Retail,Southeast,2025-01-13,Active,Quinn Howard
+C0207,Company 0207,Manufacturing,Southeast,2025-08-08,Active,Casey Chen
+C0208,Company 0208,Retail,Midwest,2025-08-12,Active,Parker Brooks
+C0209,Company 0209,Healthcare,Southeast,2025-11-23,Active,Taylor Brooks
+C0210,Company 0210,Technology,Northeast,2026-03-25,Active,Reese Chen
+C0211,Company 0211,Technology,Southeast,2025-02-23,Active,Avery Foster
+C0212,Company 0212,Professional Services,Southeast,2026-02-05,Active,Quinn Chen
+C0213,Company 0213,Technology,West,2025-03-09,Active,Reese Chen
+C0214,Company 0214,Financial Services,West,2026-05-03,Active,Casey Jones
+C0215,Company 0215,Healthcare,Southeast,2025-11-18,Active,Riley Foster
+C0216,Company 0216,Technology,West,2025-10-18,Active,Parker Jones
+C0217,Company 0217,Financial Services,West,2025-02-01,Active,Reese Evans
+C0218,Company 0218,Financial Services,Southeast,2025-05-10,Active,Reese Gupta
+C0219,Company 0219,Technology,West,2025-10-16,Active,Casey Gupta
+C0220,Company 0220,Financial Services,Midwest,2025-03-18,Active,Parker Gupta
+C0221,Company 0221,Financial Services,Northeast,2026-01-13,Active,Reese Foster
+C0222,Company 0222,Healthcare,Northeast,2026-01-19,Trial,Taylor Chen
+C0223,Company 0223,Manufacturing,Midwest,2025-09-27,Active,Avery Ibrahim
+C0224,Company 0224,Healthcare,West,2025-05-29,Active,Casey Evans
+C0225,Company 0225,Professional Services,Southeast,2025-08-21,Trial,Avery Brooks
+C0226,Company 0226,Professional Services,West,2025-07-23,Active,Casey Diaz
+C0227,Company 0227,Retail,Northeast,2025-12-30,Active,Cameron Howard
+C0228,Company 0228,Technology,Southeast,2026-01-02,Active,Casey Adams
+C0229,Company 0229,Financial Services,Southeast,2025-09-30,Active,Morgan Evans
+C0230,Company 0230,Professional Services,Midwest,2025-07-16,Active,Parker Foster
+C0231,Company 0231,Manufacturing,Northeast,2025-05-26,Active,Morgan Diaz
+C0232,Company 0232,Financial Services,Midwest,2025-07-29,Churned,Avery Howard
+C0233,Company 0233,Technology,Midwest,2025-10-12,Churned,Jordan Brooks
+C0234,Company 0234,Professional Services,Southeast,2025-03-12,Churned,Taylor Foster
+C0235,Company 0235,Manufacturing,Midwest,2026-01-27,Active,Parker Howard
+C0236,Company 0236,Financial Services,West,2025-09-27,Active,Jordan Gupta
+C0237,Company 0237,Healthcare,Southeast,2025-05-19,Active,Morgan Brooks
+C0238,Company 0238,Professional Services,Northeast,2025-07-13,Active,Avery Foster
+C0239,Company 0239,Financial Services,West,2025-06-10,Active,Parker Brooks
+C0240,Company 0240,Retail,Northeast,2025-09-04,Active,Quinn Evans
+C0241,Company 0241,Healthcare,Southeast,2026-04-18,Active,Taylor Jones
+C0242,Company 0242,Professional Services,Northeast,2026-03-16,Active,Avery Diaz
+C0243,Company 0243,Financial Services,Northeast,2025-02-15,Active,Riley Gupta
+C0244,Company 0244,Professional Services,Northeast,2025-10-25,Active,Jordan Brooks
+C0245,Company 0245,Technology,Southeast,2025-11-15,Active,Casey Diaz
+C0246,Company 0246,Manufacturing,Northeast,2025-04-13,Churned,Taylor Jones
+C0247,Company 0247,Financial Services,Southeast,2025-05-13,Active,Reese Ibrahim
+C0248,Company 0248,Financial Services,Northeast,2025-01-20,Churned,Jordan Gupta
+C0249,Company 0249,Financial Services,Northeast,2025-02-15,Active,Morgan Gupta
+C0250,Company 0250,Healthcare,Northeast,2025-07-14,Active,Jordan Howard
+C0251,Company 0251,Manufacturing,Southeast,2025-01-30,Trial,Avery Gupta
+C0252,Company 0252,Technology,West,2025-12-09,Active,Taylor Diaz
+C0253,Company 0253,Professional Services,Midwest,2025-12-22,Active,Parker Diaz
+C0254,Company 0254,Technology,Southeast,2026-03-06,Active,Taylor Brooks
+C0255,Company 0255,Manufacturing,Northeast,2025-04-11,Active,Riley Howard
+C0256,Company 0256,Financial Services,West,2026-03-30,Active,Reese Gupta
+C0257,Company 0257,Professional Services,Southeast,2025-04-13,Active,Quinn Ibrahim
+C0258,Company 0258,Professional Services,West,2025-10-17,Active,Jordan Howard
+C0259,Company 0259,Retail,Midwest,2025-07-14,Trial,Jordan Howard
+C0260,Company 0260,Professional Services,Northeast,2025-02-23,Active,Morgan Jones
+C0261,Company 0261,Professional Services,Midwest,2025-03-27,Active,Cameron Chen
+C0262,Company 0262,Manufacturing,Southeast,2025-03-04,Active,Reese Evans
+C0263,Company 0263,Financial Services,Northeast,2025-05-05,Trial,Riley Foster
+C0264,Company 0264,Technology,West,2025-05-14,Churned,Reese Jones
+C0265,Company 0265,Manufacturing,Northeast,2025-08-18,Active,Morgan Howard
+C0266,Company 0266,Retail,West,2025-01-03,Active,Casey Brooks
+C0267,Company 0267,Healthcare,West,2025-09-03,Active,Parker Jones
+C0268,Company 0268,Professional Services,Southeast,2025-08-19,Churned,Reese Evans
+C0269,Company 0269,Professional Services,Midwest,2025-11-13,Active,Casey Adams
+C0270,Company 0270,Retail,Midwest,2025-10-12,Active,Avery Diaz
+C0271,Company 0271,Manufacturing,Southeast,2025-02-19,Active,Jordan Evans
+C0272,Company 0272,Technology,West,2025-03-21,Active,Parker Evans
+C0273,Company 0273,Retail,Midwest,2025-03-25,Trial,Parker Gupta
+C0274,Company 0274,Financial Services,Northeast,2025-01-31,Active,Morgan Ibrahim
+C0275,Company 0275,Financial Services,Southeast,2025-12-04,Active,Avery Adams
+C0276,Company 0276,Technology,West,2025-12-09,Churned,Avery Jones
+C0277,Company 0277,Healthcare,Midwest,2026-04-01,Active,Casey Chen
+C0278,Company 0278,Financial Services,Southeast,2025-05-01,Active,Morgan Ibrahim
+C0279,Company 0279,Financial Services,Southeast,2025-01-23,Active,Casey Foster
+C0280,Company 0280,Retail,Northeast,2025-04-24,Churned,Quinn Brooks
+C0281,Company 0281,Financial Services,Northeast,2025-03-29,Active,Taylor Gupta
+C0282,Company 0282,Healthcare,West,2026-02-08,Trial,Casey Gupta
+C0283,Company 0283,Healthcare,Midwest,2026-02-28,Active,Casey Foster
+C0284,Company 0284,Retail,West,2025-08-29,Active,Casey Brooks
+C0285,Company 0285,Technology,Midwest,2025-01-16,Active,Avery Jones
+C0286,Company 0286,Technology,Southeast,2026-01-01,Active,Casey Foster
+C0287,Company 0287,Retail,Northeast,2026-02-08,Active,Reese Jones
+C0288,Company 0288,Retail,West,2026-03-15,Active,Reese Brooks
+C0289,Company 0289,Manufacturing,Southeast,2025-08-08,Active,Quinn Jones
+C0290,Company 0290,Retail,Midwest,2026-03-13,Active,Riley Ibrahim
+C0291,Company 0291,Manufacturing,Southeast,2025-10-12,Active,Morgan Foster
+C0292,Company 0292,Technology,Midwest,2025-01-28,Active,Reese Evans
+C0293,Company 0293,Healthcare,Southeast,2025-03-07,Active,Riley Howard
+C0294,Company 0294,Retail,West,2026-04-24,Active,Cameron Evans
+C0295,Company 0295,Retail,Northeast,2026-03-18,Active,Jordan Chen
+C0296,Company 0296,Professional Services,Northeast,2026-01-02,Active,Morgan Ibrahim
+C0297,Company 0297,Financial Services,West,2025-03-23,Active,Parker Brooks
+C0298,Company 0298,Professional Services,Northeast,2025-03-06,Active,Reese Diaz
+C0299,Company 0299,Retail,West,2025-07-29,Active,Reese Diaz
+C0300,Company 0300,Manufacturing,Northeast,2026-03-11,Active,Casey Chen
