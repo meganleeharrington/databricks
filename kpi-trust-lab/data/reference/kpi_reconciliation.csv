@@ -1,0 +1,13 @@
+﻿kpi_name,department,value,unit,definition_name,status
+Revenue,Finance,548760,Currency,Net billed revenue,CONFLICTING
+Revenue,Sales,582000,Currency,Closed-won ACV,CONFLICTING
+Revenue,Product,6184800,Currency,Run-rate ARR,CONFLICTING
+Revenue,Governed,512460,Currency,Recognized subscription revenue,CERTIFIED
+Active Customers,Finance,222,Count,Recent payer,CONFLICTING
+Active Customers,Sales,266,Count,Active or trial master status,CONFLICTING
+Active Customers,Product,245,Count,3+ sessions in month,CONFLICTING
+Active Customers,Governed,236,Count,Paying and engaged,CERTIFIED
+Conversion Rate,Marketing,0.444,Percent,MQL to opportunity,CONFLICTING
+Conversion Rate,Sales,0.647,Percent,Closed opportunity win rate,CONFLICTING
+Conversion Rate,Executive,0.063,Percent,Lead to customer,CONFLICTING
+Conversion Rate,Governed,0.182,Percent,Qualified lead to customer,CERTIFIED
