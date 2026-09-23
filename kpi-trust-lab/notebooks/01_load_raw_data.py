@@ -155,3 +155,45 @@ for table_name in tables:
     row_count = spark.table(target_table).count()
 
     print(f"{target_table}: {row_count:,} rows")
+
+# COMMAND ----------
+
+# Load the supplied KPI reconciliation results as a QA reference table.
+reference_directory = os.path.abspath("../data/reference")
+reconciliation_file = os.path.join(
+    reference_directory,
+    "kpi_reconciliation.csv"
+)
+
+if not os.path.exists(reconciliation_file):
+    raise FileNotFoundError(
+        f"Missing reconciliation file: {reconciliation_file}"
+    )
+
+reconciliation_dataframe = (
+    spark.read
+    .option("header", True)
+    .option("inferSchema", True)
+    .csv(f"file:{reconciliation_file}")
+)
+
+reconciliation_target = (
+    f"{catalog}.{schema}.kpi_reconciliation_reference"
+)
+
+(
+    reconciliation_dataframe.write
+    .format("delta")
+    .mode("overwrite")
+    .option("overwriteSchema", True)
+    .saveAsTable(reconciliation_target)
+)
+
+reconciliation_count = spark.table(
+    reconciliation_target
+).count()
+
+print(
+    f"{reconciliation_target}: "
+    f"{reconciliation_count:,} rows"
+)

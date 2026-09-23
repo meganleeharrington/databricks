@@ -134,3 +134,10 @@ DESCRIBE TABLE databrick_by_databrick.kpi_trust_lab.invoices;
 -- COMMAND ----------
 
 DESCRIBE TABLE databrick_by_databrick.kpi_trust_lab.subscriptions;
+
+SELECT
+    COUNT(*) AS total_rows,
+    COUNT(invoice_date) AS valid_invoice_dates,
+    COUNT(service_period_end) AS valid_service_period_dates,
+    COUNT(payment_date) AS valid_payment_dates
+FROM databrick_by_databrick.kpi_trust_lab.invoices;
