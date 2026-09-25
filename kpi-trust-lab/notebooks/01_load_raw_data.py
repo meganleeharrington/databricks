@@ -162,7 +162,7 @@ for table_name in tables:
 reference_directory = os.path.abspath("../data/reference")
 reconciliation_file = os.path.join(
     reference_directory,
-    "kpi_reconciliation.csv"
+    "KPI_Reconciliation.csv"
 )
 
 if not os.path.exists(reconciliation_file):

@@ -1,23 +1,8 @@
 {
-  "name": "KPI Trust Lab",
-  "description": "Dashboard comparing governed vs department-specific metric definitions",
-  "tags": [],
-  "dashboardFilters": [],
-  "widgets": [
-    {
-      "name": "Revenue Comparison",
-      "description": "Compare governed vs department-specific revenue definitions",
-      "type": "visualization"
+  "uiSettings": {
+    "theme": {
+      "widgetHeaderAlignment": "ALIGNMENT_UNSPECIFIED"
     },
-    {
-      "name": "Active Customers Comparison",
-      "description": "Compare governed vs department-specific active customer definitions",
-      "type": "visualization"
-    },
-    {
-      "name": "Conversion Rate Comparison",
-      "description": "Compare governed vs department-specific conversion rate definitions",
-      "type": "visualization"
-    }
-  ]
+    "applyModeEnabled": false
+  }
 }

@@ -45,32 +45,80 @@ GROUP BY DATE_TRUNC('MONTH', close_date);
 
 CREATE OR REPLACE VIEW
 databrick_by_databrick.kpi_trust_lab.governed_revenue_monthly
-COMMENT 'Governed recognized subscription revenue attributed to the service month, net of allocated refunds.'
+COMMENT 'Governed monthly subscription revenue based on active contracted MRR, net of refunds allocated to the reporting month.'
 AS
 
+WITH reporting_months AS (
+    SELECT EXPLODE(
+        SEQUENCE(
+            DATE '2025-01-01',
+            DATE '2026-07-01',
+            INTERVAL 1 MONTH
+        )
+    ) AS reporting_month
+),
+
+active_mrr AS (
+    SELECT
+        m.reporting_month,
+        SUM(s.monthly_recurring_revenue)
+            AS gross_recurring_revenue
+    FROM reporting_months m
+    INNER JOIN databrick_by_databrick.kpi_trust_lab.subscriptions s
+        ON s.subscription_start_date
+            < ADD_MONTHS(m.reporting_month, 1)
+       AND (
+            s.churn_date IS NULL
+            OR s.churn_date >= ADD_MONTHS(m.reporting_month, 1)
+       )
+       AND s.subscription_status <> 'Trial'
+    GROUP BY m.reporting_month
+),
+
+allocated_refunds AS (
+    SELECT
+        CAST(
+            DATE_TRUNC('MONTH', i.service_period_end)
+            AS DATE
+        ) AS reporting_month,
+        SUM(
+            CASE
+                WHEN s.billing_frequency = 'Annual'
+                    THEN COALESCE(i.refund_amount, 0) / 12
+                ELSE COALESCE(i.refund_amount, 0)
+            END
+        ) AS allocated_refunds
+    FROM databrick_by_databrick.kpi_trust_lab.invoices i
+    INNER JOIN databrick_by_databrick.kpi_trust_lab.subscriptions s
+        ON i.subscription_id = s.subscription_id
+    GROUP BY CAST(
+        DATE_TRUNC('MONTH', i.service_period_end)
+        AS DATE
+    )
+)
+
 SELECT
-    DATE_TRUNC('MONTH', i.service_period_end) AS reporting_month,
-
-    SUM(
-        CASE
-            WHEN s.billing_frequency = 'Annual'
-                THEN i.invoice_amount / 12
-            ELSE i.invoice_amount
-        END
-        -
-        CASE
-            WHEN s.billing_frequency = 'Annual'
-                THEN COALESCE(i.refund_amount, 0) / 12
-            ELSE COALESCE(i.refund_amount, 0)
-        END
+    a.reporting_month,
+    CAST(
+        a.gross_recurring_revenue
+        - COALESCE(r.allocated_refunds, 0)
+        AS DECIMAL(18,2)
     ) AS revenue
+FROM active_mrr a
+LEFT JOIN allocated_refunds r
+    ON a.reporting_month = r.reporting_month;
 
-FROM databrick_by_databrick.kpi_trust_lab.invoices i
+   -- Test --
+   SELECT *
+FROM databrick_by_databrick.kpi_trust_lab
+    .governed_revenue_monthly
+WHERE reporting_month = DATE '2026-07-01'; 
 
-INNER JOIN databrick_by_databrick.kpi_trust_lab.subscriptions s
-    ON i.subscription_id = s.subscription_id
-
-GROUP BY DATE_TRUNC('MONTH', i.service_period_end);
+-- Test Comparison --
+SELECT *
+FROM databrick_by_databrick.kpi_trust_lab
+    .revenue_definition_comparison
+WHERE definition_owner = 'Governed';
 
 -- COMMAND ----------
 
