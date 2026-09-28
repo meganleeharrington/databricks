@@ -312,3 +312,11 @@ ORDER BY
         WHEN 'Product' THEN 3
         WHEN 'Governed' THEN 4
     END;
+
+    SELECT
+    definition_owner,
+    definition_name,
+    CAST(revenue AS DECIMAL(18,2)) AS revenue
+FROM databrick_by_databrick.kpi_trust_lab
+    .revenue_definition_comparison
+WHERE definition_owner = 'Product';

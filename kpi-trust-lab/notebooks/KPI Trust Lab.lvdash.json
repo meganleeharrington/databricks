@@ -1,0 +1,1644 @@
+{
+  "datasets": [
+    {
+      "name": "0136cc81",
+      "displayName": "Revenue Conflict",
+      "queryLines": [
+        "SELECT\n",
+        "    definition_owner,\n",
+        "    definition_name,\n",
+        "    DATE_FORMAT(reporting_month, 'MMMM yyyy')\n",
+        "        AS reporting_month,\n",
+        "    CAST(revenue AS DECIMAL(18,2)) AS value,\n",
+        "    CASE\n",
+        "        WHEN definition_owner = 'Governed'\n",
+        "            THEN 'Certified'\n",
+        "        ELSE 'Conflicting'\n",
+        "    END AS governance_status\n",
+        "FROM databrick_by_databrick.kpi_trust_lab\n",
+        "    .revenue_definition_comparison;"
+      ]
+    },
+    {
+      "name": "43b9e8e9",
+      "displayName": "Active Customer Conflict",
+      "queryLines": [
+        "SELECT\n",
+        "    definition_owner,\n",
+        "    definition_name,\n",
+        "    DATE_FORMAT(snapshot_date, 'MMMM yyyy')\n",
+        "        AS reporting_month,\n",
+        "    value,\n",
+        "    CASE\n",
+        "        WHEN definition_owner = 'Governed'\n",
+        "            THEN 'Certified'\n",
+        "        ELSE 'Conflicting'\n",
+        "    END AS governance_status\n",
+        "FROM databrick_by_databrick.kpi_trust_lab\n",
+        "    .active_customer_definition_comparison;"
+      ]
+    },
+    {
+      "name": "3a410a21",
+      "displayName": "Conversion Conflict",
+      "queryLines": [
+        "SELECT\n",
+        "    definition_owner,\n",
+        "    definition_name,\n",
+        "    DATE_FORMAT(reporting_month, 'MMMM yyyy')\n",
+        "        AS reporting_month,\n",
+        "    CAST(ROUND(value, 3) AS DECIMAL(10,3))\n",
+        "        AS value,\n",
+        "    CONCAT(\n",
+        "        CAST(ROUND(value * 100, 1) AS DECIMAL(10,1)),\n",
+        "        '%'\n",
+        "    ) AS display_value,\n",
+        "    CASE\n",
+        "        WHEN definition_owner = 'Governed'\n",
+        "            THEN 'Certified'\n",
+        "        ELSE 'Conflicting'\n",
+        "    END AS governance_status\n",
+        "FROM databrick_by_databrick.kpi_trust_lab\n",
+        "    .conversion_definition_comparison;"
+      ]
+    },
+    {
+      "name": "fad611d4",
+      "displayName": "Certified Revenue",
+      "queryLines": [
+        "SELECT\n",
+        "    DATE_FORMAT(reporting_month, 'MMMM yyyy') AS reporting_month,\n",
+        "    CAST(\n",
+        "        MEASURE(recognized_subscription_revenue)\n",
+        "        AS DECIMAL(18,2)\n",
+        "    ) AS recognized_subscription_revenue\n",
+        "FROM databrick_by_databrick.kpi_trust_lab.governed_revenue_metrics\n",
+        "WHERE reporting_month >= DATE '2026-07-01'\n",
+        "  AND reporting_month < DATE '2026-08-01'\n",
+        "GROUP BY reporting_month;"
+      ]
+    },
+    {
+      "name": "8324074e",
+      "displayName": "Certified Active Customers",
+      "queryLines": [
+        "SELECT\n",
+        "    DATE_FORMAT(snapshot_date, 'MMMM yyyy')\n",
+        "        AS reporting_month,\n",
+        "    MEASURE(paying_and_engaged_customers)\n",
+        "        AS paying_and_engaged_customers\n",
+        "FROM databrick_by_databrick.kpi_trust_lab\n",
+        "    .governed_customer_metrics\n",
+        "GROUP BY snapshot_date;"
+      ]
+    },
+    {
+      "name": "6291108f",
+      "displayName": "Certified Conversion",
+      "queryLines": [
+        "SELECT\n",
+        "    DATE_FORMAT(reporting_month, 'MMMM yyyy')\n",
+        "        AS reporting_month,\n",
+        "    CAST(\n",
+        "        ROUND(\n",
+        "            MEASURE(qualified_lead_to_customer_conversion),\n",
+        "            3\n",
+        "        ) AS DECIMAL(10,3)\n",
+        "    ) AS conversion_rate\n",
+        "FROM databrick_by_databrick.kpi_trust_lab\n",
+        "    .governed_conversion_metrics\n",
+        "GROUP BY reporting_month;"
+      ]
+    },
+    {
+      "name": "00d7e1bc",
+      "displayName": "sales_revenue_monthly",
+      "config": {
+        "source": "databrick_by_databrick.kpi_trust_lab.sales_revenue_monthly",
+        "measures": [
+          {
+            "name": "total_revenue",
+            "expr": "SUM(revenue)",
+            "displayName": "Total Revenue",
+            "format": {
+              "type": "currency",
+              "currencyCode": "USD",
+              "decimalPlaces": {
+                "type": "exact",
+                "places": 2.0
+              }
+            }
+          }
+        ],
+        "filter": "reporting_month >= ADD_MONTHS(TO_DATE(month, 'MMMM yyyy'), -11) AND reporting_month <= LAST_DAY(TO_DATE(month, 'MMMM yyyy'))",
+        "version": "1.1",
+        "dimensions": [
+          {
+            "expr": "source.*"
+          },
+          {
+            "name": "month_label",
+            "expr": "DATE_FORMAT(reporting_month, 'MMMM yyyy')",
+            "displayName": "Month"
+          }
+        ],
+        "parameters": [
+          {
+            "name": "month",
+            "dataType": "STRING",
+            "default": "'July 2026'"
+          }
+        ]
+      }
+    },
+    {
+      "name": "baf33df4",
+      "displayName": "finance_revenue_monthly",
+      "config": {
+        "source": "databrick_by_databrick.kpi_trust_lab.finance_revenue_monthly",
+        "measures": [
+          {
+            "name": "total_revenue",
+            "expr": "SUM(revenue)",
+            "displayName": "Total Revenue",
+            "format": {
+              "type": "currency",
+              "currencyCode": "USD",
+              "decimalPlaces": {
+                "type": "exact",
+                "places": 2.0
+              }
+            }
+          }
+        ],
+        "filter": "month IS NULL OR (reporting_month >= ADD_MONTHS(TO_DATE(month, 'MMMM yyyy'), -11) AND reporting_month <= LAST_DAY(TO_DATE(month, 'MMMM yyyy')))",
+        "version": "1.1",
+        "dimensions": [
+          {
+            "expr": "source.*"
+          }
+        ],
+        "parameters": [
+          {
+            "name": "month",
+            "dataType": "STRING",
+            "default": null
+          }
+        ]
+      }
+    },
+    {
+      "name": "2e55204a",
+      "displayName": "product_revenue_monthly",
+      "config": {
+        "source": "WITH months AS (\n  SELECT EXPLODE(SEQUENCE(DATE '2025-01-01', DATE_TRUNC('MONTH', CURRENT_DATE()), INTERVAL 1 MONTH)) AS reporting_month\n), active_subs AS (\n  SELECT\n    m.reporting_month,\n    s.monthly_recurring_revenue\n  FROM months m\n  JOIN databrick_by_databrick.kpi_trust_lab.subscriptions s\n    ON s.subscription_start_date <= LAST_DAY(m.reporting_month)\n    AND (s.churn_date IS NULL OR s.churn_date > LAST_DAY(m.reporting_month))\n    AND UPPER(TRIM(s.subscription_status)) <> 'TRIAL'\n) SELECT\n  reporting_month,\n  SUM(monthly_recurring_revenue) * 12 AS revenue\nFROM active_subs GROUP BY reporting_month",
+        "measures": [
+          {
+            "name": "total_revenue",
+            "expr": "SUM(revenue)",
+            "displayName": "Product Revenue",
+            "format": {
+              "type": "currency",
+              "currencyCode": "USD",
+              "decimalPlaces": {
+                "type": "exact",
+                "places": 2.0
+              }
+            }
+          }
+        ],
+        "filter": "month IS NULL OR (reporting_month >= ADD_MONTHS(TO_DATE(month, 'MMMM yyyy'), -11) AND reporting_month <= LAST_DAY(TO_DATE(month, 'MMMM yyyy')))",
+        "version": "1.1",
+        "dimensions": [
+          {
+            "name": "reporting_month",
+            "expr": "reporting_month"
+          },
+          {
+            "name": "month_label",
+            "expr": "DATE_FORMAT(reporting_month, 'MMMM yyyy')",
+            "displayName": "Month"
+          }
+        ],
+        "parameters": [
+          {
+            "name": "month",
+            "dataType": "STRING",
+            "default": "'July 2026'"
+          }
+        ]
+      }
+    },
+    {
+      "name": "6924c7ce",
+      "displayName": "governed_revenue_monthly",
+      "config": {
+        "source": "databrick_by_databrick.kpi_trust_lab.governed_revenue_monthly",
+        "measures": [
+          {
+            "name": "total_revenue",
+            "expr": "SUM(revenue)",
+            "displayName": "Total Revenue",
+            "format": {
+              "type": "currency",
+              "currencyCode": "USD",
+              "decimalPlaces": {
+                "type": "exact",
+                "places": 2.0
+              }
+            }
+          }
+        ],
+        "filter": "month IS NULL OR (reporting_month >= ADD_MONTHS(TO_DATE(month, 'MMMM yyyy'), -11) AND reporting_month <= LAST_DAY(TO_DATE(month, 'MMMM yyyy')))",
+        "version": "1.1",
+        "dimensions": [
+          {
+            "expr": "source.*"
+          }
+        ],
+        "parameters": [
+          {
+            "name": "month",
+            "dataType": "STRING",
+            "default": null
+          }
+        ]
+      }
+    }
+  ],
+  "pages": [
+    {
+      "name": "d9b33eb5",
+      "displayName": "The KPI Conflict",
+      "layout": [
+        {
+          "widget": {
+            "name": "intro_text",
+            "multilineTextboxSpec": {
+              "lines": [
+                "## Business Problem: Same KPI name. Different business meaning.\n",
+                "\n",
+                "The KPI Trust Lab has been hired by Financial Co. to resolve an issue where the July 2026 results have varying figures.\n",
+                "\n",
+                "The KPI Trust Lab has found that the variations are as a result of each department of Financial Co. applying a different definition, time basis and source."
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 3,
+            "width": 12,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "bff90b6d",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "00d7e1bc",
+                  "fields": [
+                    {
+                      "name": "monthly(reporting_month)",
+                      "expression": "DATE_TRUNC(\"MONTH\", `reporting_month`)"
+                    },
+                    {
+                      "name": "measure(total_revenue)",
+                      "expression": "MEASURE(`total_revenue`)"
+                    }
+                  ],
+                  "disaggregated": false,
+                  "orders": [
+                    {
+                      "direction": "DESC",
+                      "expression": "DATE_TRUNC(\"MONTH\", `reporting_month`)"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "<span style=\"text-align:center;display:block\"><span style=\"font-size: 14px;color:#C4A35A;\">Sales Revenue</span></span>",
+                  "fields": []
+                }
+              },
+              "version": 2,
+              "sparkChart": {
+                "hide": true
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "measure(total_revenue)",
+                  "format": {
+                    "type": "number-currency",
+                    "currencyCode": "USD",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 1
+                    }
+                  }
+                },
+                "period": {
+                  "fieldName": "monthly(reporting_month)",
+                  "hideLabels": true
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 8,
+            "width": 2,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "310f8bb9",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "baf33df4",
+                  "fields": [
+                    {
+                      "name": "monthly(reporting_month)",
+                      "expression": "DATE_TRUNC(\"MONTH\", `reporting_month`)"
+                    },
+                    {
+                      "name": "measure(total_revenue)",
+                      "expression": "MEASURE(`total_revenue`)"
+                    }
+                  ],
+                  "disaggregated": false,
+                  "orders": [
+                    {
+                      "direction": "DESC",
+                      "expression": "DATE_TRUNC(\"MONTH\", `reporting_month`)"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "<span style=\"text-align:center;display:block;color:#C4A35A;\">Finance Revenue</span>",
+                  "fields": []
+                }
+              },
+              "version": 2,
+              "sparkChart": {
+                "hide": true
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "measure(total_revenue)",
+                  "format": {
+                    "type": "number-currency",
+                    "currencyCode": "USD",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 1
+                    }
+                  }
+                },
+                "period": {
+                  "fieldName": "monthly(reporting_month)",
+                  "hideLabels": true
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 2,
+            "y": 8,
+            "width": 2,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "73cd5dcc",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "2e55204a",
+                  "fields": [
+                    {
+                      "name": "monthly(reporting_month)",
+                      "expression": "DATE_TRUNC(\"MONTH\", `reporting_month`)"
+                    },
+                    {
+                      "name": "measure(total_revenue)",
+                      "expression": "MEASURE(`total_revenue`)"
+                    }
+                  ],
+                  "disaggregated": false,
+                  "orders": [
+                    {
+                      "direction": "DESC",
+                      "expression": "DATE_TRUNC(\"MONTH\", `reporting_month`)"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "<span style=\"text-align:center;display:block;color:#C4A35A;\">Product Revenue</span>",
+                  "fields": []
+                }
+              },
+              "version": 2,
+              "sparkChart": {
+                "hide": true
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "measure(total_revenue)",
+                  "format": {
+                    "type": "number-currency",
+                    "currencyCode": "USD",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 2
+                    }
+                  }
+                },
+                "period": {
+                  "fieldName": "monthly(reporting_month)",
+                  "hideLabels": true
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 11,
+            "width": 2,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "4cdf98ff",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "6924c7ce",
+                  "fields": [
+                    {
+                      "name": "monthly(reporting_month)",
+                      "expression": "DATE_TRUNC(\"MONTH\", `reporting_month`)"
+                    },
+                    {
+                      "name": "measure(total_revenue)",
+                      "expression": "MEASURE(`total_revenue`)"
+                    }
+                  ],
+                  "disaggregated": false,
+                  "orders": [
+                    {
+                      "direction": "DESC",
+                      "expression": "DATE_TRUNC(\"MONTH\", `reporting_month`)"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "showDescription": false,
+                "title": {
+                  "value": "<span style=\"text-align:center;display:block;color:#2E86C1;\">Governed Revenue</span>",
+                  "fields": []
+                }
+              },
+              "version": 2,
+              "sparkChart": {
+                "hide": true
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "measure(total_revenue)",
+                  "format": {
+                    "type": "number-currency",
+                    "currencyCode": "USD",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 1
+                    }
+                  }
+                },
+                "period": {
+                  "fieldName": "monthly(reporting_month)",
+                  "hideLabels": true
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 2,
+            "y": 11,
+            "width": 2,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "cust_finance",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "43b9e8e9",
+                  "fields": [
+                    {
+                      "name": "reporting_month",
+                      "expression": "`reporting_month`"
+                    },
+                    {
+                      "name": "value",
+                      "expression": "`value`"
+                    }
+                  ],
+                  "filters": [
+                    {
+                      "expression": "`definition_owner` IN ('Finance')"
+                    }
+                  ],
+                  "disaggregated": true,
+                  "orders": [
+                    {
+                      "direction": "DESC",
+                      "expression": "`reporting_month`"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "<span style=\"color:#C4A35A;\">Finance Customers</span>",
+                  "fields": []
+                }
+              },
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "value",
+                  "format": {
+                    "type": "number-plain",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 0
+                    }
+                  }
+                },
+                "period": {
+                  "fieldName": "reporting_month",
+                  "hideLabels": true
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 16,
+            "width": 2,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "cust_sales",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "43b9e8e9",
+                  "fields": [
+                    {
+                      "name": "reporting_month",
+                      "expression": "`reporting_month`"
+                    },
+                    {
+                      "name": "value",
+                      "expression": "`value`"
+                    }
+                  ],
+                  "filters": [
+                    {
+                      "expression": "`definition_owner` IN ('Sales')"
+                    }
+                  ],
+                  "disaggregated": true,
+                  "orders": [
+                    {
+                      "direction": "DESC",
+                      "expression": "`reporting_month`"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "<span style=\"color:#C4A35A;\">Sales Customers</span>",
+                  "fields": []
+                }
+              },
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "value",
+                  "format": {
+                    "type": "number-plain",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 0
+                    }
+                  }
+                },
+                "period": {
+                  "fieldName": "reporting_month",
+                  "hideLabels": true
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 2,
+            "y": 16,
+            "width": 2,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "cust_product",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "43b9e8e9",
+                  "fields": [
+                    {
+                      "name": "reporting_month",
+                      "expression": "`reporting_month`"
+                    },
+                    {
+                      "name": "value",
+                      "expression": "`value`"
+                    }
+                  ],
+                  "filters": [
+                    {
+                      "expression": "`definition_owner` IN ('Product')"
+                    }
+                  ],
+                  "disaggregated": true,
+                  "orders": [
+                    {
+                      "direction": "DESC",
+                      "expression": "`reporting_month`"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "<span style=\"color:#C4A35A;\">Product Customers</span>",
+                  "fields": []
+                }
+              },
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "value",
+                  "format": {
+                    "type": "number-plain",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 0
+                    }
+                  }
+                },
+                "period": {
+                  "fieldName": "reporting_month",
+                  "hideLabels": true
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 19,
+            "width": 2,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "cust_governed",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "43b9e8e9",
+                  "fields": [
+                    {
+                      "name": "reporting_month",
+                      "expression": "`reporting_month`"
+                    },
+                    {
+                      "name": "value",
+                      "expression": "`value`"
+                    }
+                  ],
+                  "filters": [
+                    {
+                      "expression": "`definition_owner` IN ('Governed')"
+                    }
+                  ],
+                  "disaggregated": true,
+                  "orders": [
+                    {
+                      "direction": "DESC",
+                      "expression": "`reporting_month`"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "<span style=\"color:#2E86C1;\">Governed Customers</span>",
+                  "fields": []
+                }
+              },
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "value",
+                  "format": {
+                    "type": "number-plain",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 0
+                    }
+                  }
+                },
+                "period": {
+                  "fieldName": "reporting_month",
+                  "hideLabels": true
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 2,
+            "y": 19,
+            "width": 2,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "conv_sales",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "3a410a21",
+                  "fields": [
+                    {
+                      "name": "reporting_month",
+                      "expression": "`reporting_month`"
+                    },
+                    {
+                      "name": "value",
+                      "expression": "`value`"
+                    }
+                  ],
+                  "filters": [
+                    {
+                      "expression": "`definition_owner` IN ('Sales')"
+                    }
+                  ],
+                  "disaggregated": true,
+                  "orders": [
+                    {
+                      "direction": "DESC",
+                      "expression": "`reporting_month`"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "<span style=\"color:#C4A35A;\">Sales Conversion</span>",
+                  "fields": []
+                }
+              },
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "value",
+                  "format": {
+                    "type": "number-percent",
+                    "decimalPlaces": {
+                      "type": "exact",
+                      "places": 1
+                    }
+                  }
+                },
+                "period": {
+                  "fieldName": "reporting_month",
+                  "hideLabels": true
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 24,
+            "width": 2,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "conv_marketing",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "3a410a21",
+                  "fields": [
+                    {
+                      "name": "reporting_month",
+                      "expression": "`reporting_month`"
+                    },
+                    {
+                      "name": "value",
+                      "expression": "`value`"
+                    }
+                  ],
+                  "filters": [
+                    {
+                      "expression": "`definition_owner` IN ('Marketing')"
+                    }
+                  ],
+                  "disaggregated": true,
+                  "orders": [
+                    {
+                      "direction": "DESC",
+                      "expression": "`reporting_month`"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "<span style=\"color:#C4A35A;\">Marketing Conversion</span>",
+                  "fields": []
+                }
+              },
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "value",
+                  "format": {
+                    "type": "number-percent",
+                    "decimalPlaces": {
+                      "type": "exact",
+                      "places": 1
+                    }
+                  }
+                },
+                "period": {
+                  "fieldName": "reporting_month",
+                  "hideLabels": true
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 2,
+            "y": 24,
+            "width": 2,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "conv_executive",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "3a410a21",
+                  "fields": [
+                    {
+                      "name": "reporting_month",
+                      "expression": "`reporting_month`"
+                    },
+                    {
+                      "name": "value",
+                      "expression": "`value`"
+                    }
+                  ],
+                  "filters": [
+                    {
+                      "expression": "`definition_owner` IN ('Executive')"
+                    }
+                  ],
+                  "disaggregated": true,
+                  "orders": [
+                    {
+                      "direction": "DESC",
+                      "expression": "`reporting_month`"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "<span style=\"color:#C4A35A;\">Executive Conversion</span>",
+                  "fields": []
+                }
+              },
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "value",
+                  "format": {
+                    "type": "number-percent",
+                    "decimalPlaces": {
+                      "type": "exact",
+                      "places": 1
+                    }
+                  }
+                },
+                "period": {
+                  "fieldName": "reporting_month",
+                  "hideLabels": true
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 27,
+            "width": 2,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "conv_governed",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "3a410a21",
+                  "fields": [
+                    {
+                      "name": "reporting_month",
+                      "expression": "`reporting_month`"
+                    },
+                    {
+                      "name": "value",
+                      "expression": "`value`"
+                    }
+                  ],
+                  "filters": [
+                    {
+                      "expression": "`definition_owner` IN ('Governed')"
+                    }
+                  ],
+                  "disaggregated": true,
+                  "orders": [
+                    {
+                      "direction": "DESC",
+                      "expression": "`reporting_month`"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "<span style=\"color:#2E86C1;\">Governed Conversion</span>",
+                  "fields": []
+                }
+              },
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "value",
+                  "format": {
+                    "type": "number-percent",
+                    "decimalPlaces": {
+                      "type": "exact",
+                      "places": 1
+                    }
+                  }
+                },
+                "period": {
+                  "fieldName": "reporting_month",
+                  "hideLabels": true
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 2,
+            "y": 27,
+            "width": 2,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "ee16ec97",
+            "multilineTextboxSpec": {
+              "lines": [
+                "<span style=\"font-weight:700\">Finding:</span>\n",
+                "\n",
+                "The organization uses the term “revenue” for four different financial concepts. The calculations are not necessarily incorrect, but they are not comparable.\n",
+                "\n",
+                "<br><span style=\"font-weight:700\">Definitions found:</span>\n",
+                "\n",
+                "- Finance: Net billed revenue, net of refunds\n",
+                "- Sales: Closed-won annual contract value\n",
+                "- Product: Annualized run-rate recurring revenue\n",
+                "- Governed: Monthly recognized subscription revenue<br>\n",
+                "\n",
+                "<span style=\"font-weight: 700;\">Recommended enterprise definition:</span><br>Recognized subscription revenue: active contracted monthly recurring value attributable to the reporting month, net of allocated refunds.\n",
+                "\n",
+                "<span style=\"font-weight:700\">Why this definition?</span><br>It aligns revenue to the period in which the subscription service is provided. ACV and ARR should remain available, but they should be labeled as bookings and run-rate measures rather than revenue."
+              ]
+            }
+          },
+          "position": {
+            "x": 4,
+            "y": 8,
+            "width": 8,
+            "height": 7
+          }
+        },
+        {
+          "widget": {
+            "name": "906ec020",
+            "multilineTextboxSpec": {
+              "lines": [
+                "# Our Findings"
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 5,
+            "width": 12,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "89c173ef",
+            "multilineTextboxSpec": {
+              "lines": [
+                "## Revenue: "
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 7,
+            "width": 12,
+            "height": 1
+          }
+        },
+        {
+          "widget": {
+            "name": "a9fdb697",
+            "multilineTextboxSpec": {
+              "lines": [
+                "## Active Customer:"
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 15,
+            "width": 12,
+            "height": 1
+          }
+        },
+        {
+          "widget": {
+            "name": "eadd2a94",
+            "multilineTextboxSpec": {
+              "lines": [
+                "## Conversion:"
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 23,
+            "width": 12,
+            "height": 1
+          }
+        },
+        {
+          "widget": {
+            "name": "49c7d8f9",
+            "imageSpec": {
+              "image": {
+                "source": {
+                  "url": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALwAAAC8CAYAAADCScSrAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAeGVYSWZNTQAqAAAACAAEARIAAwAAAAEAAQAAARoABQAAAAEAAAA+ARsABQAAAAEAAABGh2kABAAAAAEAAABOAAAAAAAAAEgAAAABAAAASAAAAAEAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAvKADAAQAAAABAAAAvAAAAABvKzyRAAAACXBIWXMAAAsTAAALEwEAmpwYAAAClmlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iWE1QIENvcmUgNi4wLjAiPgogICA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPgogICAgICA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIgogICAgICAgICAgICB4bWxuczp0aWZmPSJodHRwOi8vbnMuYWRvYmUuY29tL3RpZmYvMS4wLyIKICAgICAgICAgICAgeG1sbnM6ZXhpZj0iaHR0cDovL25zLmFkb2JlLmNvbS9leGlmLzEuMC8iPgogICAgICAgICA8dGlmZjpZUmVzb2x1dGlvbj43MjwvdGlmZjpZUmVzb2x1dGlvbj4KICAgICAgICAgPHRpZmY6WFJlc29sdXRpb24+NzI8L3RpZmY6WFJlc29sdXRpb24+CiAgICAgICAgIDx0aWZmOk9yaWVudGF0aW9uPjE8L3RpZmY6T3JpZW50YXRpb24+CiAgICAgICAgIDxleGlmOlBpeGVsWERpbWVuc2lvbj4xMjU0PC9leGlmOlBpeGVsWERpbWVuc2lvbj4KICAgICAgICAgPGV4aWY6Q29sb3JTcGFjZT4xPC9leGlmOkNvbG9yU3BhY2U+CiAgICAgICAgIDxleGlmOlBpeGVsWURpbWVuc2lvbj4xMjU0PC9leGlmOlBpeGVsWURpbWVuc2lvbj4KICAgICAgPC9yZGY6RGVzY3JpcHRpb24+CiAgIDwvcmRmOlJERj4KPC94OnhtcG1ldGE+CnYrg5EAAEAASURBVHgB7L0HgGZFlTZ8unumJ+cZJgFDzhlRJOMaMSvqJ6vrmndN65pd0wZ1zWEVMWHAsKJrRMwBFAkqSJAMAsOQZgaGyT2x/+c5Vadu3bp1w9vdM7jf99fMe6vq1Ml1qm7duqH7tm/fPiw1qU/6ZBj//ioS1eiravJXpWNVvQgyDPX7Q32H+LXGR0Ho/wOFvj7E7HB9zBY9MFbOqJfVLqGJNhPsFYZN9BXksQE0ObcswU0eDPQxCfacrV18BKUQEzs+5fQbqdQOvMyktv5oDPi6juGsWqS4DGhc7aBo4EPcmDY0+EJNW0nHCKfN8JT9SOucUUaVevFRF0Ed+A1v78IowvEmlvs9amcRs2rJE6VKGbehKSCWcEqVgFIqqNkteOyrvqYlTYmjmtPBm2Wi+hpZZRQkqKuUttNXvfCHoMXs5QBpOOVSs158MBJLdjR/06m7nA6Y9Bl918F/Jj+XN87wZYKuYVimqq3RRk1lvuWa4bg8zKY+YNJZPLAsk+VrLUGXJ4qgNfS1OlhDDV3EuXbAV2dYYwrqJsfFzGPUWJe4nOCPtNpdpTJmZFUhmoHONEo98wHfwjQNNKfJSI9Z87LMglwzPovlgIFrnS1tPBK6INtk1tCXu84jk1fCL+hn/Bpywx2WdC0SS4vLEbMmubENcTki71oMk5EnMJ1r6RO9YrztDW0x3kjK+YAfpfEjUSSlMYdZHtobnBF3eSiPxBbKSOh0/ReUGH0h6NeBVTHYKt4oqBN9Q0MCb5LbwN2xa/B9eoppkqPMEr2Cviikgydu61qusyUf8DmukbGjUijikxNjsFqHNTjKaEed18io1ckLrPUL+dXwLOka+yYul5B2XCW1T4NGgb6lwYYxVzdVpkez68i7B3yDsbEu2Zkw9obxiWExg6Rcp3hAS/mk9YDYXKibEZqpyq3FTBzDWy0okM03hNSVC+wRlUzHLvYWmnfBblEntqdLH/UgsgfU6i4NiQtDWUEtVrbFrh3WPFZ60JbU4R15B990xN9hvtjZjM1ey3eC/ODrMZZVmeFLwU5hPQQ7laxNdNZoUg96mJisPjk9Ut4lVVHx9QBO8SnQYAHJtCjnWZ3KKDu+lvOBSc21mW2WG+4OzFvc2LNkW25WAr6JU6WzEgc0KpngNskZUVumo0wfM7aWL2lL9EZJCljt/teSK62nL90Iy1DEnDPN9SDTb8QMItZNfZFpq/R7xCpXzOHnYDnaHQULS7muN56ocOrrHGxHKTyWfLmf3RaYhbzISjog7jkGYSZACtr/O0rqgf+FtkY9FzoiP8PbbBLQimAPIwVt6QCI0MemmNFjLBh3D3ZKi6yMg51NcbCPsa7mZ4p5qJN6ILaVPulqb+S+sbCjF7/kROcDvmRcWU1bHhgzxoDFgeVlim61Eq05k3pYuYZNiS6H00KfIxkRrMFnI+Fnfs7aZ87vlfFY6Kj+hFZdeWUN6FXxAt/80hYXBUW5lA/4Mk5jQNP35n/LE/JO1RJt7My4nOVUeNRKlit6K32WaRXoB06JdxUrCxkJjTFSv5ScYy3teUXuWAz+sfJnrH6sV1yOcdIy9eiKG9EWAV/xToFl/ra8aNm5pZyK8fLE9LN8RNrVOdF39Eh4B5o63m2KpoZH9fQUr8/beDlBbht/4CufnH5NTHL4TbKaeBldPKB65W88GvIenpZs4DKCJvZZF/tbWZNJFACt+CNBoOPjjhgJjxaanD9ysAqbEejWiW8qaGf4OZXZpd6jXpjhd3S05LWmnppGO4q7qN+rjAQ/rBtN5x2QB39EvHMwaw5mj2AgpmcF49mYdxglRAl6NTJraVTDm6yP6HsUiIBvYJx0fCRm7Ioj6LCehHe1IcZLdAoeinCa/LwzB0ijHnWOSuyrQ6uskZuEgQn9FHxVyzTfEFiTgVYCJEugrSMQVqzhbWzGnWqO8bBmFbJ6jQpYff47YRfpmrQUVdrAXx2uwc3WgrJa8jgM6CZfd5lBm3zZ1JYqFeuRDrS4LaVL61mZXXySMorqFZ70dY1SAVwhKhhWmiqAAjdbAv5DtobPKtQCNPvUOTwYoIVuTJrZWV0DoBfcMVFu5zKh20OA7lzRo5YWzfCj5jVqBnXxa3A6OTjagKOW2pFB12Anu15wiW9nGZb/ClKba0MfdNUVBGH3qGdiJ6SNrEnnuK0+4Me6Exr4mUJ1RtXBa/3dIMtoTKbVH9K81wGSKptx0IjtAy9zX93SrGfeINDtY9rZM7Ezto0s44LgJW3zCPUBP5JOME8FUVGhgV9O2TYDI87VYioLAnpd33aR3wWnqtwOgARFCk8WpR7lkZfnpz5rYRRE9yhmx6HXaOTB/cUaoUEFGt1iuFKngdbAsq0pK65pQHmGtKtiMgB1s1WdHln5huz1aMQx3J2aVywfvfQMy9juuNxJGHyXYRlI69oq8NpYSDQiXgQqLlrZMIYBGyzIFKh8pIM6IK5nSMYG1GSjOhCaVTw7NqI7c2nSsTOTAjH1ddHy/04p9kGxpNlJwU43p8Gd1ndUVww32ci2mmCvAdeq2evZpMSoSccSYnuFfh0T344Jk6q+vfq1yqEbJFa/CPhutA4LnZIqm9aNXR1c23VWNczR5o2SlHkJI/ZCEJ0/3WZRA021kF4vVDESSM4PdULr4GBZsi9TT6QW1Tb5ZJzgpLIKZt1LWVOywO482zCLgE8MqiNUQ4Gb6pXWjb4Oru1ts1msU1w25qU8H6wllLgCQ6qdVoXEJJ3KrXpmuHg/lKSXKhFNHRwojb6OWFSKcT+Y/qmcGGc0sirCdy6gWMPvXLljIy10Tto7NeyJn3RcDeb/FWB6pXEQsLHJdTvAX6067QDPxzKLGX4HCGpjWXvqt0BuY8D2XgK4F9wusnvEaYqtpjY1kwcGaCaC62gzqORSpDpCYuhgaEIo2HS9ZiG3Np24WK5I7RIPZJxhTm4xuHmGjzSMioWl/39JPbBTfdPLrMuerkRPx06DHE5IIVh6kdtRhKLFOsbljjw42NTEjpNZfoY3Ky2H8KhY+JBO6Jgy47Yj5UOHFmIlsjPAIrW6e8ETRfwiNu1F0rV2bKRNTtkWKeGsGwc7aVrltjCua6aO5o9I36hYR6lw1bcH3Zpn+EZRY9uodpNlp04dW9kPGbfUVsaq9bTFrdV3kpKhH3aCvLGS1YWPnq3g7/wMnzOWHWCdkGsfJSywzozWrmvEJhVGFDc28zQxHk1bamusJMtxfTRyeqAN/dADjaH2qu5oZJlMTpBd+FgMtQd8zK3BotAUBUmAUbsIHpTtWAin2Rb8krwENzYjacpXqW8SkLX8R2FbXriHmtKWNyI/9I0PiZpJH5W8kOmX9oC3XracHDOMgrGRAgFGGsBjFgSlKW4v0aaI1sg80sXAMZ+UtHM9ssNojL/VQ57BDW21RMBQ/QNmtQBD1JaMQRUQ/FCBVTn+74JEfTsixTP90h7wuQ7LMKJCbQ4PrGoMCe1tvEwQ84wuMR/q1WvqekbpxNd0zSGr/rmGAlayBRVjV4J79Bys4FSUjEcByZe64uWpM9CafldMKp+0d7UnI6kEiu1oD/gYu8SmWgkKJopXMNMgbcOvMOgI6MjX1nfGNa2nHWF4I83p0h7cWogBUfBxAXWl1KcNMko8SpUy04Ymj9iOETiyLzI6hnZ1SuQV4I/VxBNr2R7wQaMeOqnGsMgc5RrqNfhEipWNVKnMBqU2qzTwLVCw1GrDa2s3Zh1z2lSyqwLoyKgJDTxLMnK4KUI8QaRtOXoO2054IG7yoZcb4oGyavBjcSX8rH5VYO22JJkp87aRWeXZDBlrfs3Sxr51tPqPln4sLLKo6WPBh01U7CxiJDSdmWcQx8B3tTO8+aRupKk6VKAu1bQ1UNRxKsMzfLMjPYNXZpTUiN+FhjNPHZ7NSnXtFGk4ifisDQnOWFRVDg+h4LnGCjTpX2qLerMEb9Y0FhWXm6moc0/YWXa1M3wWOwJSdGRu1DK2xZ0lh1o3ymKHWrBHjud6v3VJNLYuqXArnhcZRY+AlDvaO9wW82PFipEBnO1UXrVvHhNAq53hVTyVq0n1LTUEIwSPhZzKRajpEgUuQY2yDNdy75uxDZBCg1qdTfco11svDX2lqG3tGO1jakudPPNfpP9ois52cuC1WAsn2tj1DyK0sOreTEe0atbGjoGRsS4Cc+QzaeBkULWx6TAmejYJeIjaIh8FDTQ4GQ0B4grA1YAiHGX1aYqTkOis0YZjNGPt44xtDDU1z8tsD/ixVsqMHcM8NxsarOgk12tFnQpkPDSGelVYORUC2OJM1TBojGNlyyN9Rz1nmLyGnD7s7/eLALhqO+RTlS7J8Ojhv6bUGvDB1yPVeqQDpge6Xk7FOKOpJb3QNJle8Y9GMSiiiIxxtiMCWHdxxNJIkgsjE9WJA0laxTGg+4R/CZt5X3+f3LN5ndyxabUsmTBDFg5OdWfMTgI9Uie5NQxHQ1vDEgFPt5Fzc+JoLwVJeq5oJt9hrdRp5f2rZPWa9QgiPL+d6ulnxcmTJ8mM6VNl4oRB1YWBT1r+7GzQVUkGg57qSUD30Rcs4tcX1RXoDwx0qBd8OLR1WNYMbZehLaQCNyUmZyQeUCeIybN3FRyHh/tk/rR+mTjOgjM09VTwYgoaCOQsPtCHWR2Nv1p9h/z9/dfJncNbofyAXLHLUXLklAUYEPAdEVTngnzsS2MvYFzh1mZ1S8FOVO2hZpq4dSSBFdPnyhbcX/rqD+SNr/2IyOT9RDZsBCrM0rQNR87o40UOmCPPfsR8edyjHiaPe/QJsnjRLjCBgWZh5Si6HEOwEzmKRgaQBivzKDHYBxDtDKZrlw3J727fLBfes01+vna7rLQpn/gcEToqUDa+ZDogMhH1bTBlGuoPbOuTW0+bInvN9t2ngskgSrTLeERgLfq21HINdpx6NmzbKl984Dp51Zo75Li+QTm0f5Jcun2TfOyBm+Szk+bJBAyIQMtCTn4qM6436Rbj9cy4RJytWGQo62BEFjUBdlba0TUGVi9Oy+COG8d15kw56LBpsnLtRNhCJG8NZytA7h/aKN/88p/xuwj1r8sPf/wqeeLjTxGb6QHUxL7zlDoYKgPd49VnRe+bixjstyzfJJ+5ZIN86JZNTsKkAVk4vk/2dpMpBoSPd5Xeh+0zzLSgY8zSAmrVP9An41G5GEMnCjltrRzqgp2IURtnaj3Jq7x+uXPTGvm3FVfJ2UOr5TEI9A192+VBzOj79w3IX7ZtlnXbN8uEcZNkmGdI/OP/usQm82UJJ5IfJk4Pq6UpMRh5JQS8KdZZYKz0yOU7yganVVhncIfRIXTtxi3bZOWmrZwQfUcwYLZp4A4iWOYcOl1mTJojazZslic94VT51nd+Iqc//XHoPFjv+ZoflEVso0UvG1oSB8k28GQQk/F3/7BGnvHLdTjx9MtBUxCquMO5EfK4mtkIPE7qA1imUG8OVpLpD2ZxrU/VeFNU1/1UcLsb0iiNKjFgt8F3bgnTJ79ds0xeuvJaDACRxw5MlDWwuQ969VNfALGChzxow4yJijUkQ2tAAY8yk040YEiqrrgmn/2iXRIATUzY4V1TL7hdeWbw7KzRp7M4ZhzIteB33ijqWzAjPTC0TW55YKMMbRuWfR/2t/KsZ/y73HTz7XpxZrxqvZh0TEadAHLB3iebIecjP14pz/jBGtl3Yp/sj8uHe7F2X4mV1nq0bcGP19B0F66ldJCwzjIHIXXaDhxXBp7CIIZdYd1RjpegQ7ZgNL5Rgx2jaNPwNvn88j/LSfddJXMREouxXl8LAZgjNJFMl6TMHah8zPR3Fq9M1XstkpOY0okX/VkK+EYmHTo8GFmDG9o7qQckb2AdXXm5Qe05I3nmpNWfglEGF4AGoNuDm7ZhFqPp0+Xr3/qxJ/BZnbAylquZrKiNwcqlyAPrtsrrvrFSXn/xRjlydh+WAiL3I3gHtiHauRgHHvWhiiyGH3ixrFcfaORygwOIMMNVI01PwDVZ7qtdsgEE+x1YwvzT3ZfJS9culceO43KwDwPA+VFlqpLujDKgreBM2SafgtjfifykWkInyYhSTVx14uX1LQU8CWM7OjGKkFIjoyYtssOYWmUERF0lpr50TCpHBJFiUgh+jHzyUV6+TjjqgwjIFeux87DndPnsN3+nuzzcbw6zfIV3DSAxhAEygHXM7cuH5PQvLJczbxqSI2f1y7ItEIupeyDe3VBV/Czu45/0OsP7fCvgGCN+MCDwUR6vZvYJl2jgqv+oXW0sgCakSF9OFhetvkuOuusy+e7QWnlM3wQsYbbrhXWERs5Krj2BYswu8GWhTFRqYqWWLsFsYdOdUcLXFAhreGuvKMaAqfWmUXXMvTUVGSl5JE9xW3Rw8w/nROPM3EEdq3jgMEiwfsZMu3jaOLnrqltkxcpVMnfOLA348lkjVSxf1zGFJs7sf7x5nRzztZVQZVgOmwL+m7ZrcDKYuR7msmQ7pxk94wCI9bj0c9mCNsC5U6L/AVbdwZP6ciAsxGbTb9cOy3sOHJTFM8apvv3eV8TJplIEgReCmoP7p6vukMdjGXMi1ur9WBKuhr6cwVU+GAW/YeLg3EE2QUYoFBLj9rhcYGRKmX4NrK2NOaWTKZPlrtZ4pA1KHmFVAp5t5GmCbe0W0eSLpmC+dZTQFiu1mVMfEzRnMLGjgnc4k5btYgCOww4EQl+2bMEUjNQW7LFflAAHLjm4TGKEnH/ZA/Kkb9wvi2eOk+nYgVm+mcEOdRDMeo+A4hDU/cyhH/fT6WfEoMLJi8GlB+SkIWwy2E8C+LdrEOz7T5TXHjuZVEpLnbonrGER7A9sHpJ/XnmzPHJgEgJcZIiDAHkc7PQXZegRQlhyNRQoVAE4uJFRtMV4KDcmT5vFsTbLs0jNQGdDGScb8MEw4MZls7PMwtdGoViWXwxs61VVkl2GEIcebpAieDR6YkaurxyERI7GMLikaQr6ki8gx12c9mOpMSxf+NE98rLzHpRDFozXAFqztV8GMaCGeUGteiBHAOv6BEGnkebtIl/O/Ew28RN1M0DzIAdxLjduHJZvItCfdeQUxeOMX3Y5mTkeipA5MKA5i9+7eb1cjzPcKdBjHXTrBywEu6ejfHLTHw5VzkCgyF4SI7CsdC/UBW4bHypbo1s24AvO5VLV6HK71SirK66bemu0M4bMG4xwTkQEwBG2Do/9qgNAFfJaISva87Lbgn8bL0Cxjl63cau879xl8p6L18vRC8bJ/ZtxQYxAGodpnJ/n1jmcAY7A4i4Sd69DFHF6pXiCFIyDL/OcsyvODldtgrKD/fL706bLMUsmqH35/va2ga7OpzruwJ9nDcVRXKcOi+YTNmMzF3UqgwoyJg4MS0XJIB1yE5BBJb/IggxGBFK/NuA3KNdTwEciG4udFScX74RWgxuMCJ1Hl6GDuM/dxwUxacDfBkFQWnve+pFrf0uFkMaZHmIY7Het3Cj/fPZS+datm+WYXcZh5sTSACzUJCxjOLlzueLq7CDoBRgX5CjhHxgBMEwi1tRx1L9PdsNjA1dia+cpu4yX/3rsdFkye7yeUUjTpJtaogLNpiJX9lZFRU8qVAHi2Uad+F9rfrkVJgvvs0AOZVM9SFqSEZBRUL4GqOZZuipagPSKb4TtAa/eGCl7E9Oej0aCC2jPQfuMYYE6/mefbSEqO0ADw50ZVMO2TvEiuLa++pYH5ZQzl8qqzSJHzumXu4a2yvgBd+tItx01iDEnMsAZyfxxRmdSGED+gtViCVv0Mgk6zIJeV64alnceMlHe+DfTZSpmeC6flGUcOdSHOlvOYhyIlKk2oiFKaiZp+GOG3Be14ALZQXjkAORg8KsupdFDwj/wKDAc84wOMUrP5URuib6mjbrR7vqAN0Lmo0ylTsjwsj7LNHUCuQ7CNiO7TfU2ndlRLllQKQ5BwHM3qVD2HaKB4NArR9qgOyLA/fll98ljP7lUZuPi9NDJ42Q59vXHMxq5sObyhYnRQb6YKfGEnoOxrtM+29Gksz3R+nDpLDIHv9WA/3n9sHz1lMny3IdP1bFRBLtjE46msOVoKM26lFeX6Bj8zD+MBmIzsGkrc6U2FgExYtjE39ByOOQV5Bmiz31bAi1XczwNo6bNzKgP+BpC41vOIy014Iy9wyp1QplQazlfsoFc6tqU0B90NldMYLOzGF/QP2ihAAdju+OMTMs8NaOsVZYDlQPiqDeTsL/Oi9OvnHe7vPDzd8mBSybq9uKDW7ZivQ4aBjYv/Shbp2LAEPQ25FRHBjhvOnHBDhzVEAOEd2QX4S7sNUPQbdyAXPSM6XL8PnheBfIok7tAqqpq5PWP1GSR0DhpnUS+MbZLZ2o06Z1bUnocqqWcNNcxyUsP5c1FGHeVKoJioV3Lnj9Yu8SCh4WcLaq/NTjU0R7rAz7l3CjcBRc7KERPhR6AHnUPDkl5pXXKtfUCZagchljMAUAf+BqEHkd7MEZLeFuwr92wRd5/zs3ynvNXyRF7DmImZjByTxvihrmUIRMX9DoSeGOIeunszkinNoBpBPHSlc/UDCjV7gPb5QosYR61cFA+//RZsue8QR1kHHs8q6h6qi+VCwVWNKXq86KUEvvsbAMObg5wtHq2g/6MXx2fwDUe3NkKZcJRod7hLkdpQiBmVR8Ae0tkkbKiYJVljb2xjBmyV8wqF/CpsBzvyNCcCmTRyKbGLzleOfGdYFRAtSiyMAAZ7F6Y6ep4bg3OYJ0zoZ7S4XD6nHdOl923Xl77ievk238ekqP3nCD38eIUweTW52AaL2UsADiNMuqY/JJGXaCzPyZ6zOq8D8AnfK94QOQNh06Stz1ptsycPKBtIVYdB5gFfr4P6nzmliK8AdYvW4H/xwfuk3Vbt8ixs+fL1HHjZSu2Ivv1OoM6gaXqp1p53/hdJPqQsigTyR15J7osOVKppJ8S9XKgAK9GIAvx5qQHeIeC07JgaMHOwIe70aBDvgMnj1I3kxcieuDVHTVghhHrfcG6S+hFDT6rA+o7TdtLvnNccNsFKEWDlcmhH8H+p+tXyiM/cINs2rhdjlw8Xu7egItTH7T0nXtwDcg+6FUXzpKcOsF3GDx0OYF2xxtLIwTdFPIA7E/3bZfPPmGWvPjUmTqb63YnArHQSDWHqMKmtI118magM92wepV8/r475cNrMZK2bZFXI//AngfjvoDjofQ6vaNOXaknmygXZRZtTiQuuSqpCkLFp3iZFOtn7a05ZCmdU6sVvQ6B5GqTR4jLKQ0Cvqk5RacjQBE5v4Th4akCJZyk0guukaJ7fNHlrs4pi3X8rJnMmdibvuwXCNqhDnGbNcH3vJm0HctodDGm7/MvXCpPes9NMhs3k/aejm1HPG05Djhkz/U6p8hhrsl1tkeoc1bXu7eUR4H4sZ056qTcjAdk5mG5c+0WBP5WXAA/b7Y8+vAZ4MWHxHjmMA1B1iFx+aJ3eqHDik1Dcu6ypfLqe5fpo8jHT5wokwYnySfuXykvmoOl2My5jiP1pF56F9g7CyqqH5lrIAJVbSDcJTwBEWAe5DLFV8J8ewk5qnj+EWRERdNPiVXHiE1Up30IeKQIGKFWijApGF9pjAAlBSJ4rljCNcdFiI0yg8PIxa8yrbPIQ5l7DoQzscoDpmA+0CV4ytsS1+vjcNE4hOfqP/fN6+Q1Z+Li9IAJesdz1WZenLoZ1Ba/wwxuDWQnwy0RwE1jHO7lmoeiqBseud2GYF6Mi9M/PrhFDpk7Qb75kgVy4G64vc8ARLLnYrTScjBXcVbfiDeUfn7X3fLme+6SGzCjH4unHnH7Sx7ABfV02EN9hrYm9xu4JUr1IcdpjwJgeg8DNqm7vLnE0EHAs5J3o6pnSlg/WN6iuzJPcY1XGy3ba3GhXMqXxkXJBXwCdNYCmMBjWyMe9cVaxQrWJZ6psuBcaq+XhBb3PIxSkCjo7ji4+dUzYLBrVDIy8USWl8tgf2D1kLzrU1fKJ79znxxx2FS5H29pbMXz4vYsDF9sdkpRgP9x/UJWPJMgABk0ypM5gobNDPr5eLDmjyu2y4sPmSz/ecYimTdzEOt1N6t7zTplDD5eQzBdvmKlfPT2O+Rra9bKwePH4fmYAVmDAcSbWX36uCW3a/ncEHV1yS1FsNTCGAh3g9Hux6f3OXj4m2ekpHluYDp/KqeIp+Pc4VgXE73wqsUtbIw1IdS0dgHvW0NDLcOYjetuY1RqMaMa+GTpSkxqKiT0dumso2gE+hne6ughindyUEDwKZnOpigTpK0rlIKHa268V170gT/JH+/YJocfPEmWbXD767pO10UuuJEhzww+4JQHA9rP9orAyNGBsR1auZetp2KivfyOTfKBJ8+RVz9tsUzEu3pcr3MgWWLJ6WuQfM5gX7p2nXwJL6+8676VMjB+QI4fj50j+H0VB5Dq6qzTZ3Rgc+XsARx2kwq0SFc7ALMBS/GA0XFkaWcigkec4piwODFm1KdwB4QCEOMbXo957NNSwMcNXXgavulo9bFQsla+CQNC6aJJCagBV2rOT5p7iHYucdSJLPSjL7mdeDeCblj+cM1yefjLfycyG6/hYXtw6cZteFmZQUGBmP10mmYQoY7lie6xI1iL9S6kAV9fItPHffFsOQJzGsqbsTtyJcbVuS9cIM8+dQH4cb3OYEcxStTXEqXGdcJ1vQ6iC5feI6dcdTPW4H3yCAT6JiCvwm3aPshSn4CQeukjCwwYLl8iZjoIMNj0ahQaaxODnSUEuzeZZrtAh546T2jwARin0QSl8lPvetmeMRWiGN8ei7Mym12fUmf63Zno4A5muHFeCvi4oZcy9RtxolFO8xGzcITsMWiCwKT5DEwaz4M+XuBc6lCBth1yl63Ce6a7PV7O/Np18ulLcFt/4Th8ewWPCSDYB/HwF+ZKXIMiuHHu1zIdi4fZ9QYTAo93UPUCHhHCpY76QSNju2zFrDkPq6WrwAuLd7no9Uvk+MNmayDqPjntbkg5n3K9vmrjJvm7a26TRdBtd9QfRODqyokHEtGdHEgsE8QLcAS8Xq7E8ricwYCxIFdnmcOUmMgEgInN8tpPZMzk9bf+a7HH0eSPqkPc5FkryGIj4a9aBH1VS4fOo+rEXEGlQyng2W7mlLByFSqSKJFDq4UZvRlUi9je4GZ69KAaaBYgB2+rmRPcjIzZfeP90j91sUzb7zT59KXbZMkszMSwZxX22McjH2Zg84lHZYqg4QyvUyJy/GeobEdQ63KHMzqjjPIQeHyNfDEeYP/jys1y7KKJ8pVX7y377DoV76diMGJg6J3TdrNKGNSbdj44tFmWYm1+JF4IfxC5PgINfXTNzkDnEomDLu5MnbILdhwbxLE7rdqNpNVEv+l/8PB8YJ+5wbAchjocbT5nY+hPwCKwY00+ACKrtClC5hDzzjTXglLZHhEBzxZqYEctth+aFKHRTe3k3tRe55A6uOqPi1bKVdnen2a0wYnHu5tDD8rA3P1kwu4nyfD4ybLrhK2yFrPwMGZyvv2DxQbUYxCTD4Meia8pYZ2uF3lo49JFTeAyIm7DrLtoEDd9bt8kLz9xprznJfvInBkTShenyo88LakgU9aA+Vy3IBGsW7GTxNjW2ZyKkJyBzeBn2X7U3j9mVOIIMAMe6BiEOLAAXEeLRtK7gzLUs2SyNCJGJTX1qyErb6v4nD5gaqEnqcd06EldgQ3+RMDH5Ire24EKmrJG2aK0odXmOYcQuQ6uJjDgEZCmS2wWYG7pgRwvLQ8sfrgMLjgcHY3X5LZskDUD4zV41BTGNUSRvM/f+nf28XMfXCahFUGtSQOFBFj+IGom4JHe6QPDcvktW+SDf7tAXvWcffzFaWYnRgU4No2dHDrPGa+fCsTDan18lQoRr68Neps1s1kZ6PbYMZ6BcAZ5cWohA5yDA5k766FAGorhz/zgSYnnBgULTERqSUF3j9cUF01tkRjVo67ORtW/XrfSkibi063oHd0NeQdiqX22LckOhKygGyp6kYlHCPAhoXF7niLjZu6JzmMAI3AQ1LwgDY7UHqeuXPdyyYASDpzTKUZ9Ct580pKrHO6ycALFK6Z6IXrVzbj588a95dmPW0ImurMR78QokAfVOdTqCyEQVLIj5EzrZ1u9AOXZiGcZXktTXw5EVdbTaMCz7BN949fwtMiCXOmA4vyHnEsZIwE/XmgXiWX4BcjqGcrLJTILNmQQ2tpTEic2hbp6nQ4Rdjbg1VcRkhZpmHZ81NBkiEcLvHKGeVjAiVh3K/oOIB/hJ/Y4ZSFILWjJGL04vHVI+nAzZgBLmHFTsUuyDV//wiDAPUp0FmmACB66PECVL1WTFED8Y2KNUcS+A4xARBYDhE86zp8wTq7lVxCGRC5438Fy8sPmayB485Sul4PK9AdmbkvRaaR8uBTB+n071zQEsx8sOE0/hREbHBDc3hACXJl20nSXKR/urOoL5WSrfQs/6LrJBzYfiCsl76cUbDjkoc4yQCYHjl2fZFqroDpZVcwsJBvw6usUnYqlsIY69SJ+oDHjmVvy5YBj8M6556V8jEsSpJvX4OJ0NxlYcJT0TZiG9SyikpHKbQuQhyAHzAaKC1Q24sd1O3KuYXVZxMBXBAQ7eOyO5+GvundI9tplgvzwvUfJgXvN0lmdKrknHU2vwig0FX4pwM5fCGY+sOZGHDGpKnV1ZZXNN0UYiEiqk2foliZoI7pXU6VzZtaCkrgyBirPUJbUa5RBPNLiRz5Mfj4ozfhBH6+Ww8wcTe9SE4UUhG5wlRDGthKJSwI+eK5w8AhFx/4NLLLGh9aRF8IsQqmYdZBpJ21eLf2z9pf+XQ5FJ2K9jpmdSxgicEmiLicik+rG4NZm7XG9pGOwMHr8DM8o2a70fbJkyni58tYhOeOkWfLhfz5SFsydklycUp9qykFVLlThA2t8tOHS61bKH29ZLw/fd7qcdNgctw9urHRJgwoZUReq57tOgxVlDX4ThJOP1o2euJz1EdA0T8cObNSg51IHMA5w22qli5Q98NmmyRT21U6ZEpMZuZEnJ1FjWMMhlhOXa9CzYCdOm5KA98KbApMojCh1QZb9TgOammGG8A7l2nwYz5cMzDtC+mbuDX2gL4MdQc8Z2zmaanLtXjifaMoLfNzbULST0cSEMnqe+/ETEJRzJ/TLlVesl39/xRJ5/QuPkMkTx5WC3dG0H21PXq8FEH2/v3aFnPWTpfLVa9eLTJkgch4C/20DcvS+swpmDErO0IQgWtkdpaCnSaY2cbiGLyUgwBby0ER87VPkuoQBnMFNMBGIziYu41jPpYCca/Qw6zDiIukjGK5YfzQaYsTleorGliTgG3FdIy3uYlwHVqNFCQPeeoEO2Y7pDOvzgQXHSP+UXSBiC2IcHaXOcsGu63ztOkQFlwvoZH2QDFX3GIG7IGU5LBOAT+qJOEHwvdM//36jfPF9h8gLnnmIcgpPOkKpMAAbDNSxCUfaI71X3fyAfPand8qnfr8a38QekMPmDwpOIHIJHvq6eRm+iGABT99zduZP9XZClB+DnL7w/iCqxhZxtYCcRU7r+mOFMzkyo4M7mPQhMs+IbcqLNMbcy1BkHqI6i5G4gBIKEW6A9VTwetDoHgdBzwGvxiRCGBTs5FZDU6NGoHDMIpymyYdpG9bnuDjt3wUz+yC+34K6zuq6jchexayI3Rnegne9TCKUPTkvRPXJRo0A4LqrONjmbjLxefLNwLnvtiH5yReOlceduLcOCJulyS0X7HSXqUgcPpOi63R47KY718qXf3qHvPcX9+H79gNyyC6D+LJwv9y9BX/0gIrhRpN734iUTGDG2ZezPFU33t75epHJwGdw0i4K50zOsiUSbsGgZu8bHDZqUd2EEs8c5M0BQN5InBuCzw3omoojfUzCXhN1SukAoz9NxYKl55/iFwi1pd4CnsaQVSLIOrmqmJebMybDx2N3zoJc8measED65y7EjgyeweXFKd/uYY+x0xgESNsRIXSXmoACL1S1T3kqR7JtPuXNaMJ/djK/MzOIwbTigQ3yhy8/Sh522G56MUk8h0umyqJyMPXYQFx+4uO2u1bLub+8Xd76K8zoCM6D5o/HY8jDci/22MdhL59PN+qnRvhYLwapJe0BVrHn7/Ygve1OVTSwzooHMNgLcmPjYJBLbA5A94QnK/jRF2jgkodsNPiRafAj10SjtNEAPs/BEpRsNUcHGPVjohpWVoBWMjoQTuRSKqhbA57hoW6pMxCMC3YlKUUlZ0zRWim18iMFkIjHxDW7yFF4tH0v6VuP/fitXK8z2GG9tiHnjIdZrHjyUQnR0RgJ6GQ+EMC7sLqW5c4MRojicm0LPtvwxwEE+/hy4XflhmsGEfDPxR48HlHAtKcBb8pQoZpEvE24IP3qj26Vl3zzDpF1W2T/xRNU1/t53wx0AyobBfLj47066PxoJZhI3KUZhx9w2EwzFV/tRZm2MmhxJtMBDPcoHZpCAopdB3C/XcVQJvnhn97QYp0zPjK2N67hA+NRFKi/xgolUniRCCklbS7jaHsG5Cxw1PUB72VqsBO3IWgryjje2SP1SfFTWGgPDsiwAhJnHMaoDPAljv0RkJjV8WRiH7f10EM6Q+qWHjsUBBDk9pU5jVGKm0HUR36W07ursNXttzsaPH8rWzeukOW3XSCLltwuz3/eGXL/A+vkVa94sS5NQtCDY10yU35xyVJ5yetvlMMeM0U24+/XrMSzOxxzXMtzQBAPNw6gGsq0g8/LxJ3Pdo4DBDGDUJsI84HpzUIjgAx87p1zgBDHEs3nzI9cl2OEY4CobPjJch00XoCyA5OCjXrNOHbPyaguluh3cNInVOvYN9F30CIEvAqKCXIC1doGhWP6mnLhsAIhhpX0qHMMSGMaLNgBobMYBdyD40sdwEBZZ2pGg7qSkYKiBjdgulbHjg5xdZ3PRv44ilji4MHnODaskM03/QDr3o1y7+AMOeiox8trX/MyWbd2rbzpja+R8Xjxgi9ycF1erHGVRXQg3z65+761IvtiaxOjdSXW0bRXn7qENHemAASoqpMGJnVmwScS8ISmAc+BrOjuoCJwoLnIOGg1uPTaxNNrBjgGgc7+RCUvDSTkoNGBB75uOiArDgbiJzxU+xiWKUNUCa2hT0mt6GZTyo46JOxSlFAnIjWHPC36hhDwMTAQ5QotCudIeoF11YP9rjMcmeuyBcsNOETnCPYMZzcENGPaeRwwOpICtMlL0qD3+Hr3FTzAj6f5vnF46GvVrbLltl8iiHBXFn+2cQBt1y1bIwcf9Th5+9teLxtwUfnOt71OJuCvA27jVwEwcBgcGrwU7ZPKRXmQz8DgkWE9K0BH504GEzpGK7CAOX+0AWt4vfEUGAGO2Zkmqim8AGcCWAG0l3Scsbms0ZmcXiGCJZRB7y7SwQtV1U8HCMqoq1vAhoOCW56UwvcGek4USzLmHVNJChVzTtLcPertGUVtwefOECA4uhIvQEPAN+lCItW3RWmzrYlXbVukvOGYuFRpay9yYnBmZxRwukKVvcYOx5KGHaa82MmEcZ2sj/8CVx3DIEVIkIYQXSeB4/LrZNvSC3GHdro621084g+LYZlwLXZXDjrqCfLe/3irrF27Xt7zH2+RaVN548kFvTLKHVQGFAKe7oOrPtTJe5l1TNFqAoOVZwHtRMdMNeQShW0MBEVUEpTdQNBBbh1PHOJGPJQT9HAzPHeggKMzO1rI0nRBmQJIGs44lKdJG63Snpt807mOnPzZZnkTfsQjTDDE12S5r/pMAz6MjnJbqOVJQ3MomI8DoJdCULQgCr4tQOWSIWjug507GlQYQat3U1lGO+ZSRws0vaDlliM7nUqzg3knlrQacFtl6z344173XiF9k3DDR3uceG6pQ0bj8f336zToT5NPfOzdsmrVGvnkx98tM2ZMywZ9MM94YXC6l8g5GvFD0iUIgx368J+uv7FUqiSOUw14EgEP/3VdTzZah60oKw8KBr72DZqZ1BNkSxewThoAdSyykWUSUDXWiYf6MHaPiqSURTVXMhTyMP8nxUBWwvXQGBbKVI7tHqC8A5fWggZ8GB2t6G0IphXwoiJ1Uh2z5BGib2/Gj5gEY8nD/bSTOdNrAgxFPT2jjvDGkTCEvy49XI9qMAxjvxtLGF74bkWgD6++U/on42uPgReEWdSCBQfQ4CCCftlaOfDI0+SrXz5HNuIvCH7uU++VWbNmyNatuNNrHz1SXZyyuqPEgcUAQq5QBhw1I38qwzMQyvoEJJcnaWJkgoWOE+IpDepE5YA1EuQ6M/PC12BAUXt5lqCbyMsGCopUyAJfaQijm/BvmDSWvC/YTKjl1txTrmyNi6ckw1KK2rWtglBgqz/y7Z2WNAWnqOTlqyPMw94JihXJU3si0nIxQvQNzfhlatacWAYRepDBhMSOJlxvuXuGNpv3MaDYqzwL8HED9Dzz4aFVsg1/yU7wgog+aKY7PGhWAdSTPzAjKf6R7SAuWK+/a53sf8Tx8u1v/EjWrdsg55z9Qdlll7luptd7AcTkz9Pj8xmqK0A6yxNMjpSjP2a4/qCO7Lww6FhEHeT82IK7O0wakhMP/y2AUdYnKNlGl7BuiWWeIegy5Y/c1ueUz3KkC8mIh8uMgo8PKmNrOXFDAn5MEuAseHqFEUkxtdbzIcgwntS9JnFsjyx5njqjkgOF1SW25ZpzsDoeDXD33MtmqICAV1mc0VhGj3IW5eMG+nN1BhAfBZiAQJ/Rvw3vnyLoN62VrXf/AY9A8u+pYs+d9DqF2n48DFZHcsnhzgysc/07iMeDb7xnvex3+MHy0x9eKo996stl2V336Ay/HWt1Jg0s5PqoLy5EdflEXXmNoTM+czfrOxgHL35c0kS+VT78A69ky50WDVzmzlwXyGx3MMFf7eav7GrKBZyDhzIpg/TIFKY0rk0HEXD45zO1zfd71wAFVZHiSkNQFgQokYb2N+ATRdVqwHGM9GRVYl9UYuUKaEMpeKKKQ0VyzQrrWVAIniBIe8q98YReQTujgYHCH4KLOYPHR8UmdPBsfCZj9eYtct+ydbJo+0rZtOxynLmhywC3OJFzva56U3cGOOcGlLFk4EzsrgmKMndfbrpvg+xz+D5y1aW3yQmn/aPcdvudGvTbeLfUJ+0Tmkx99Ic26MPZmoFvOQeqzuC4UaX6GAPm/qJVzwB+plZzgaquIAmDWYMUZQRwyf0qnzgejztEFtBo04GnOcrKEwObuKTjT1MoRDBrq8mpRESWwyrpSQQC1Gk57ALWwtYzagp4L7m8vgfbaLYpxAV+JVBrhbzaNa3ILOtkUhjw6B3M5NxW1J7XgGegux8fIuAXuPbAXwm7d+l6mYunEU8/eYosvey/Zb/5E/HHzdyuvT5C7DythukywRa2PmcIWdCzV3RNj+XNLQj6PQ5ZJHdcvVz22vP5cu21N8o4wG2GX7sOL6pg52U8riG24olOm925a+PORtCVs64OBpyZcC1gtLRUQ9fPyBqwSgYnIud1uM78GuwocxZnIHOAxH5mGet6d0YBDuue1gKfD9wRpjjg7c4IPihQLRKIc+ACoVxqwVU14xhTQIOIGDeWVANvX9LEhBTeYbSp3JiOgLROGHnV8Cv5pQaHLIrE3uHSBb2DAHezJYPFlg/b9E/T74d38f5y8f36B09/84WXyzmfeYf8w6tfIjdddb4cvOt0PBwGjkEe9SuWL4W+1K6Y3Vnmj+4ZxEeRbr9/SJYcjAvecdvlkEOeLVddfR0+4ecul446aD6mmX5Zib34mdj12Irg1G1HBHgfZ3XVHfrrtiWU4QxPm0KCFL+U4UWkXkj6mZzj2s3q0AcB6wYA8DHA4oCnngUemjSgAVN65rCFJDrwXK5nDCUkMVLsI/Zt3OYwAIuAUdGaS+0B6HnHtNZGHhU+9H2UrD3oF7Wh2BrwRu/IEuZlXuVaKjCtl7FdLTKoLDeHHMOI7ZY0GuDsLQ18HyyY9YdwoXgQ/k7STb+7R0595q5y+0XvlAP2210mTZooH37/O+Rt73q/XHv5+XLgwqmYednzzrdODxfQFtiaqz2cb8ttCFtsWQ7IHauGZNd98YbVgvlyxOEvkj/8ERfDSMcetYf84ZyT5O6la2UF/iDaHDwEtoXyGOxc1nB5o7M9Iw76Q++K69AUghkKFksbVJTMcsdCgzsOIBoFPHcmIa5b73N2D4FOPRTH4epXxziwcskUjGUQz+BaTgiJG7cnzaEtDjlzdYwbt+fkxLgotwZ8CT9lXmocg0rOoFq2hTJu/xp3Wjn80UvDvEDlYwUIIl408mbQwXPHy3UX3SyveuMj5btffKss2XU+Vgu4YEXbZAT9v73jDfL+D39Srr/8+wj6aeAE/pjdXUCbEoQ1//SBM7h1PGb0ZWu2ynx8omPqnnPk4cecLBddjItiJD5p+cez/0Y24qOqt+Fd2Hl4EGwzlyG6jEGQ64BFtLGOvwpYmQkZiAxO/PRZf6BoUCPn9yL5c3W2o0x3RMGocQa4Ll+ISxz9wTbUdUXI4OaPZyD+PB4wXEJTKYWGErRSCWRxsEe6KUFAKsgzoKIxLqW84jaUewv4hPihrRYucDayV7kkCD2GeNkmk7Bs2GvGgFz7uyvkvR/+P/Lh97xSZkybrLs0fPaFD23x1j3Lb3jty+Wsz3xJrkPQ77PLVNxR5ef4GOBc1vDHXqXLmMc/g3kcjz+IoF+O71NOxgXyvH1PkBOPf4H8+kJ84gzp6EN2l2u/cJqupW9dvVnwRW59R9YFPaJPgx85At7tQikZbESuwY42lnWguMDW4GadwekDlu7Q9b3qizIT6XgtokHuBo4FPZcxjta3a9AbjSMli2yKgziL4LwWmqgHU0pH19Ylo4nbI1jp+i6CGzp7qtYK61JD7iVv0rkXPoZbnmkN6nONeAY6AwXbkMj5HfZZE/CdGNwRvekPf5Zzvv52eevrXqD75vrF3sjJdJJ7JKBP/uFlL5BzvvZtueGK78mi6fi+Oi44NegtwNUpFuCsuDJCziljF7eoE8ZPbK/gszPY9dn14APlUaecKN/7wU8V96B958v1Zz0WLLbJLSuHZBGDHgGma3raBFsEz8fHs7MSajAjTnwwuwtV1kGrMASx7uQAm7gol/xH3ro16pYwGvwMDvtxIBCHtH5A2YBQ+R0Onfq/E1IizGioK5JWAwz2OLA7GjyCuYCPGzR4HAaJjUGMEtE7x5QAJEoEJ+21vBK8uJrjGAJBGWINz9DElLYJ24274TW5FWs3y7Jr7pSf/erj8vznPhnt2E/mbI4gDIZ5IfZsO3k+/4xnyHe+92O59eqfy7ypgzId++x4Qgbepbv4g0DdtiSMZd/GG1nRmYBhRtxxePBs1dB2WY0/bbn34U+Vpz/1NPnWd36skg/Ya77ceNaTZNHMfrlp+VbZbWKf7iTxnVzdqdnEmdx6QUk0gN1SA3Wu/y3QEZxumQJ8Bq0FLC9uYx7UWYMaONbJyDlfuMBGBbSs6xyCnPvwOvsTHwk1V3CVoowSrY5aS22dKrGudQQUglSSE01ibCjN9g5de88XfRYTRS0lxganYjn8HMxokGd5Re2VIsVUgJFo7Sl8awb6bMOuxj5z8fXfa/C53js3yB//9Cl5zKmP1EDnKsE5Ic+QbTSJwfH0pz5ezv/JeXLb1RfJRHw3fvakccL7PU4TaEOFaKf/ce3OxwHcGt63E4k84WZ+Im8Dzjr3rt0i+xzxTHn2M18s53z1OzizDMt+e86XS896mpy4z1S5YSl2ePCpviFsR+qfu8Qeuj7eY/ZTB6zeOKsPg58uV5BpcDPA7aczPIYc2zhL0zBLWoSutqzRC2UX0LoiJA1xGOTkw5/KMAY0iw7wKSoSouz1YAhRHusRgUvFmHepIVOp5Qfd0Zaolgn4DE8F5RhnFauztI5xF3hpPokIvDmqx0ZchG6R/RZMkluuvFMOP36x3HrbZ+XoIw7S5QqJTN2chnbKJw5N5ZngtMedKhf85jy55/qbZD1m2gVTBnWHD5xc/Cgjc6kPdq2aXuBFhv7Hu6z4qzm4mN0sBxx9orzg+c+Us7/0DeW128JZ8s0PPE5OPnCCXH/jWtlrEr4fb0Gmy6TIbI5cNoblhgtWW9rY7M9g10HBgI26Xr1JGP67LVE0kxcHC88SpFP+hLs2V48CKBMP5glQxOLADHyZmNMXabJ2wq3sSVLUUGd7HT8ieTkpG56fu6WcolnKjEFZvB6AdbLNOdqZw7JwzkS56U/fkb990cny8+9/QvbaYze/NufjAU6vOu3iIWXiuMNz8omPkEsu+6psvH2p3LtmiyyezqB3HV90v+dq+igDDiH3PAzneOd4Dgp8mg+BdRPW7Ac+7Nny8pe8TT756a9BTwyoedPl6x98sjzx+Fly3fWbZQ4/kbAGa3iNushfDEgGpgYoygxOH6y2xHFt0JCDZTNwTTew0YfCdOZ2dNqkAYRGBj4G1DDOLLqEYcCzzW5EoehS1ZPORmv3OZmbQy1nE5GNIIZ7smh8GsTlZgfF5+gi7KqGbkEaoYyiaIrUsfDtFnh1aD3BvcH92oO7y2W/vUDe/q8fkM984t9k3pyZIdiVp3eu+bhNDvXkE5W8mD324UfKn678ughevL7rziHZHVuNvB/kPoGXzBmhIx28CHX2r/aSimbrjSsQ9MccK695xdvkwx//nGzatEUW7TJTzvng0+V5T8Ay57oNIgs3Y/3MLdcoIVj1D6hRlg96nZlZjusMal7EMojT/mEge3xe7NpM7gLeDQq3hgci/nPg6OABajbVweOgjHUoXFFm5/FzweoQ61vKjIrxFMOT3oqbeizHhuVIfXs806RoVVPKXqy2Ow7r1uG1OblaPvP5j+l++pTJk8rBTrQ6Ysei9siLWQb9EYcfJNff8EWdcZf+eY3sMXsSdoJcOOukiM7k+6H6Aze2WJy5dtcB7HNaxR8H1fXLN8jBCPo3v/5V8qGPflY240bT7JlT5BP/9jh5+WmzRe5ZoXdvg4JkwB0WBCBncd4Q4gVl8UN8Ui8Eqf5wLaABG/UPWXDGpl56cgA9ryWUB+MbPz5cp7yJxzoQ9eaTKZL6M6pHRcP2eX1LglgZn6G9O4tsn3d7PJgeihwWhOcKdGYvSkU8SMpEclcuM1JYhv/xjzxGfvDDn8qTn4gtPiSuvxmoY5Us6A/Yf2+5+dbPyL6P/ie5/epVcuix82XdBjxHDzVVUz3TcAGDpHoCmvMd2gp3Dst67N4ce8oZ8va3fgUBPyxvfdPLZeb0SfKBtz9RVq3bJmvWIeLihKXOTP6NKMIoQoWDKU02ZQjD1e4U/OEEvkiiyxPiI+k35qHrdOAO6MNw4KG0PFA5YpGfO8vhdoRMgk+ncYRoG5tZtgrxi4SWfMqjO1zjR2LidcHNSymgGUW6BXyj9IK/lhJFWc3ITYjK1Ub8iD9nSJ4xTj7pOGXAMn+6HBmB3LIW5ZoF/T57LZE7LjxLnv2Ct8llv/4fIO2OH5YemhgwTAxQKqpR5MvI3ChgwSezdFhuV/z58u/vfLVcf9PN8vEPvkMWLpgrn3nvU+S2O/EHhn3agtldfrtRfr8fZ27QqxgcVBTqzPmlAub8TcXm/sXr9czhWeDbTtjCvXW1/I5qYmbXRT35KC+Pxa0hg5EfTwWTx2ucG5/QscTrIRHdLFcyVmzwtPGKcWtkxvwxZCHLpKGG2dBqNeQROB2FUdOOKsbK18nQZRID3c/qgcb0JWFcrmPk4YE+g8flDR8Eu+e+FXLe+b/0AcDVOalcMn2sEzkAy4mDktFItbBpqbOsWzrxI00PrHpQDj/sYHns35wQyCiXb1A9sHqj/PYPy6AD6T1fU5g5zzIWFKjrzhAuOI49dIEsnOv+Ju1dK9fI72+4RyZNHK9LsNg3GgyerZs8qAKChrzg31MO3k0mD+JmHGZ8tdnjEmtHJorpHKhqf16b9oA2Ivf8AAAq+UlEQVRPAyWt5/n2Bs0pSDns0CaHtuliPKhNE59U2xa+LkhdwKakY1l3A8cNCv2eDs2oDJ7uEpXfKHlQmumlIQh9egrGkrq5jo8Q4mYrM2eq60/Dc1iVY3vAV0h6BDQFjwVknfI9ihoJuok2P3bhwaDjDBcSiHnadLyMY2gtCnFTKpBt5iu06bKMcnDlaUHOnMHGk7KbXT0TZp53YJHwd/wKVXIndrDXGDZS1rUcAO6MUXCJSg19aTp59hFRtdgFR6lUnqdXxQteTTxGEfD0All3T+ws67wcFc/G2AHO45jXehebE/XQw3q0gwFerEXHQH0vP+Wb1sdAUj0L6sDUNYw6+qwp4EdxXu6oZTQS64PdWc51YooTpNgo9oAAN6c512WPdirXxkifCnLMKy5XEEcIiHkGAzK8Mm1jGuwUaTIs97qlcqy50DI2ooDGLMvQhhqZewGuj+p569kvsGrAA05Ta+8zvM20QfgIC8bH8g5s6JuKMQCknRSzcqf+GNJczsqg3Gig1J2p6mTprAl65eE7uFmLbq3p5JBS1emZw0thcd3NNWXF1U/sjDI4JiuXm/qZvtH1U/ns7mRAiG/TvMy155oGvDJOSZsUrOACkBreC33Kr8d6l46vsOyonwVNmwzjr0HtK7Ffu9Ibn8457ODNLppT+WuBmYCMdYplNOkX2xTTjLqc9kFazwmIbeqCn/DoPMPHjorLYcolME2xcmnbGNXZUevWr5c1a9b6W/2cjV3n827h9GnTZCo+gafbaG6q6iyZNNwKJL9777vPLbdQdoPAyeHZZRxwNmNvm3+fadHCBSVZxOV23oYNG2X16jXKQwMI/tIzQkkbciuSc2nhWNfmjvwDyhMnTpApU6Zgi7L4IpptX/YSpMRdsfJ+d3eaT32ibpMqX4yZO3dO0LtpYKjmdFZXP9OUwrzC8FypF9wcvYd1u/EEYe5unqOibO0ZKtukMNrYrPikGeNkAfnD838iz33O6bL7/ifJ0htxkwYvfSzZe7bcccOF8tOf/VIe+5hH+U5sUrasnPHmQDrrM2fLW950psxaskBWrVijL2Xg7g7+D8vue0yXpTf9DsSHymW//5IGfMzJAu/iSy6Txzz6VLzneoIsw6dBwn65xiodhR9vAulb5ODAwOENHz5Axg0hczqfj8e9p0kLJsiR+y+WQw7aSx525GF4hfBoOfDA/fE1NOyt+x2ktuCkbhyMK+9/QA585DNk1V/wcvs0fH1tHW5qzUZ+/wbZdf+5cuXF35c5s2epD2PbsuW6YKf+qfvTepbhCIAmy+ecRmxyaQ54I/SKMSNIU42yul4tsKKSEY59zuc8mCYg0GU2/r4TbuSMH4i2DXsQ6YKAf6VjAM/O4B3Yf36H/Oon58q8PY6VFes3yrgpA7IVb1ItnD0ZNzKHNdhf98a3y5te/xqZP39eaXZXJ3s/ceZlmjRhQMZNRxAzoJGCP1EmPmfuGOZupprngTEVXzFGdePmrXLxBTfid758li+wIz3/ha+UV//ji+SYY/DHIZAY+G1BTzy+Q7BqLWzbZbL+5fAt+IzJRPhy9YxBWbZqLZ6xcboTt5K6zujeD2ZJhU8MyPH09DFabVmFwIt+8Gk/eOTmgE+EaEfw4OHKN5FaPiknjVE1Rxs1j6jINewEvJLHgC9/17EbO5vVif29758vT3/ak1DaS/Y79GRZunK9TMPHlvhO9X6L8fjulbei7Q759nfPk6c99Ul87KQcYPCTfu7PO4szKZPqiJk7dALpgKuf60Coa18rJj2EL32EfTRX13EC/EmD/TJ5yTQE5jEyAXrxjupXvvhV/M6UT575WXnJi1+gn/C2M4wySw7KC7B+6DNx4qAMb9miX0buGx7An/eBYHxRYe60SeEONnlVBlDNjE77crHA8GlMRKjh2UhnjUrveNBjqbzmgDcmce78rpCUWYzWVh4NrfKO9DBZvJmyCW8BjUMHbvezvrXFHaVBFdFbUOite9zW/8hHP4nPX79DFu9znF4Q3nQ3/rgxInrSpAFZNHsqgv1XctpTn4fPe/xCDth/HxVRmU09f+NtnU886kh9iMJPdMzBiyVzZ07CgOGpN0rseOtAdRgOHrYVfNas3yz3rcGbXkisL9z7IJk9Y7K86pUvk/vuWynvfOeb4Yvoz/JErFm0uCLroSH+tcNtGvBcVY3jpI63VeI/Nx/7kPRNyextwsm2lRyQxWgGRvTqsgS7PeAtOixPGNRVKTcnsA6/CU4+kR2KqnOk9VgTsW+LZ6eYzODszGv+fL289BVvxXP135eDjjhVbsdf69jEdTVs333OFK2vWnqZfPS/zpKXvPD5ejHMpYoGb8w0p0/JGc47fKZ+1uQJsvKOpfjdnaNqge0uexywuyzDH1rjFxaWr92EATAkRz7iMfIf//4vcuBB++Ha5pnKgzra4AtMSzrZAIh6DpO83pFl3yP1GALFYAVtxFV5jfmBKqZBkhHSHvDWkZaTSWR5MCQRmPgyI7o7KGcHO6/SgcoSkluEW+czWPkgGDv13G9+W577f04Hh/1l30NOluvuWCUDOK1zKbLf7rPleszqvDC98LcXy0knPFIlkd6WKgrIHCirnNzMzufZ503DZzxuu1H+4ZUvkic98TGyedNm8NOrWJAURjg7HR/y4+7TfctXyM9+doF879vnyFxcX6zGR52IwZXTtdB98T7Hyxmw54Tjlsluuy12OzB+WRX0SVUjB/YtfUskXE9wqWWBVDElioPAMy5E/AtrYoQxLEeymri2B3yOOrJcDUkNT+sZHtRvhzmB+nkHmIw48LhvzU5lsK9YsVI++JEz5YPv+1fZ84DjZAN2QW6+F7soCI55eLSWF5kM9lf901vkX978Wlm4cL6u1WkSg73NjuqgZDBx7xwbIpMnynJZJUfgycgnPuFxGS81g174gjPk+895uvyfZz9dl1+c4TmcuAyZwt0dJA7Q553xLC1Tl9gPpQ7gNb73mSLzoPjMPYR+i/reQ7tlo6HtJqETVrgkasNOfVHCb2z0mHSaOS4UY0BULjHvUokViMtFH1rgcQ3NCzwG65+uvFqOOfmZGuwHHfk3cveDm2QlgoavCu27cLrce9sKue2Gi+UrX/umfORD79Zg5x86YLLA6aq14cfW6HIBgKFNbh2+DZ/m4Fmj7UcdiDNxwgR5zrOeJu/8t/+Uu265WBbyOgD8eAG9biNfC5wmv/ntpfhI7FY3ONNgLbsqVs2Vge9QPGKFvo1BxDKmZfC3pRxOAvPnoTZOpfbOAd+sYmJ4bFwQF3EIxYguSxOIWwqBYRThVRIGCS9MGQBf+dq5ctSRh8sd16+SvQ86Ua5bugpfo+iXKfgGzYGLp8vNf75ATnrM0bqu5wzJiz9uf5I+F7xVaQkk6Sy2uk8E4gJxHF7S0OQGIgdj02/cAHaioIcNvr859SSlnohvWvIFcc7MG/DitvQtkcsuvwp/g2qd6myD3guLMvQDLvSr7eRFND1E+KMs+r6Oer/KkDipz5IYseFYJY4gCc3IljQxP5Tb3EHFSqOx0dKIeVyk8Yny+cBzzFOdOLOPHz8ed0yXy7vf+2E5878+IHsffJKs2bBF/rJ8PQKI91z65cGlG2XNXX9QnFe+4qUyE3+zibRMlVv3sX4t5UIf6scfINahlhOKct6uqA3kcXBOw91kJluqce2tuyuzxstt96zCAHf79IpUdygUVPXUi4CNxma1L+mzWHwsMoaHckLrvRaatZCJixJC5FvCRx3wjUqzkZ3DzqXyjcglNasVb3zW6BibBuptYWJiu84vQRjsl1z6eznuCa8QefBy7MI8Sm65dzUCA07A7M3vPz54zzo55rgl8qH3fzpcmPKDq7y93nPytlfpIid4m7brByDpIkwNHlalc+2Ex8HO+vLly5lpcNqLItiaF8HuzZFHHqxfSFaE2gN0wrqfslVt+E+1RF2XXc6VbjCyQ329lp01NNhiKHFemRjjRpRVJxzIVstsNxkEZPWiTwufjaAnKaWaamRRUoEcIxEct6Ha1NnGJOJmoGyOVYEmPmtCmk+e9Tk57pGPQMdukT0PxBLmTvwdJ8C53mUazxstWzbILnNnyKH4BiQTZ8YRBTuJY1tZLyVqRARDcjkDOf6RJK6nZV508ysH3/jW94E5A+v2LbhR5XhNwtIMHwKRI484ENunU5UPA6o2ISrInxixj7XsAdo/DSxqeXdsKK0CSBMrYjwgPwcumVZCQCWqj1nAmz6V3EZg2kDHJW10eC/J8C03WnbMWnxNgOmGG2+WN73lHfLqV7xM75jOxjdlbluxHh9JxSetERy26/YAbuIs2meRnP+D8+X4U54hd955ly6BbDljvC2v9nuz7sVgZtg5auPB9ToT1+Xx2p00cT0uc/lyH96r/eCHPyFf+vwn8BzRYXLv6iFwxh9ZwDp+Cj4BznTS8Y/QmV99ZAK1JTnEkaB4TcgJba/Vrv0MFUakBYmi7ogHkl/SsHVErIOpEf8AG5MCnZMMjJRvEUxooRn43bt6k8xd8gh8DfhlAGxFsJ8kt967Rpcws3BnkwG/Guv32XgTfwV2ZibgicO7V23E7H+4XH/17+TRT3qh/Py8L8ruu+f3sKv29uA/2INnMGUlbhLhQQU5/8e/lPV4mpJ/C0pf6YMBXJqQI81nhzFgubvEnMG+YsX98l8f/R4wrscDacfj0Yd1OEtxCYK5Ht/BvPkePOQ27xg5wd8zACK5Ki+WK4l3fyGzZBcUoPzGRAT2j+URsuof1UOxpT8DHgpt4omblUNgJvmAR2uJimJqKDJMAihjdGhLCx63JDbFYb0H5yg5VQdvPjG7ErP2gr0epjPcTXchABANey6Yjq3Gldj9vgGIh8h6PHq4236z5U48K8NnUm67d63sedCxctPVN8uShz1Dbrn0XNl7rz10G9BmYpXT4yE+C6l3YddafAp7+q4z5cfnXY7fN3rkiOdp5h8l82Yi2O/fKIPYZeGHoabhSwS7zZsq11zxK/n5Ly+UXeb5P5+Js0g80zUKC1GGAdDmf2u3PGIc2ESwSlGdUYF2ABSEneR4jsVFa4lqBMFOhhmj6zV3Mkpi65GzLaWZPcJQV+DA2+0Men6EiA9D7Y0Pll5/1a+BOUd+e9Elsuuui+VRT/x7ue3aa2Sfgw6QW3DROgFr39tw42mPA/BncW64S/bZ+zS58cYfyH777TPqoHcq2oKGF8t4lh9Po83cbZbMmnpC+2wabMSfycHZYOW6ITxWgKccsRyh6/ea73aUGOxn40GyRz/qJPB0jwArqTomMCkXuC3JC1dAQzeSdoShUGa+I2qJYn4CbZNUBHwNJtnST2OeYn07KttJB/LFjyy5LN2CP+i1YOZEfXSYwf7yV75B3v4vr5NdFy1Udhf8+Mty8uPPkFuuuxLblEdh2bMWM32/3I6tyj0OWIygv1/23/9Yueaa3+IPlB3YGvS9+Mt03IiHarZi/W2pKS4dDr85jyehJw/i5tN4HTir1w7JX677jTbzSc+nPuU0DXbjqXns87SB1xH8Aww+adDjQB17SZ3ttz5XAggJo6yjNKP36Jz8uqiKgG9WsQuTWhVJXOvkiCo1NjEmYNbxS3rFffEOp3jMnnthCfOX6+8Ei9vk6//9P3L66U/Vv7/Ei1H+dt9tV7no59+UZz73H+Wy31yC52gOkJux/JmAPfnbcXG7676zZdkd4+TQQw+Sy6+4CjerDlM62qXPriey6/1ljigwbF2+CUubTavc3dZgqxbMYMutlfUheRAPJggWZS7tIv/x3g/J3z73WbLnHrtrsJN/3VmQNIXq4KcV6sgfrxkcAieNXhLJNLFgJkfF0J72uaMqjgl90eBLCX3gW0EsAxDwXVHLhKFGz8TCW+ugTBxR0iClD4LKdATburhEr8z5Sertsnj2RAT7b+RRj3+2fPxDP5JDDj5AufHRYV6gcVeEd18XL1ogP/ifz8tznvePcsHPvqW7OTctW63Lm2X4a3wLd5sqy9ccLUcfdbhcfOkf5JGPeBiCnp+xLktW5rWHGNeV+dz+JpyBFs8elAUHzAc39/UxtwxxwWc2movdF8uGZdaMqcLA3mev3XUwHnbowbLbroucfbxyBXlTsBPReJrKOkditqB2Yb50ahhK95x0UYqtNzBRcnBtT+iNZrR565KmVUDFa9DUeQyk5ryIS2JIxeCUX0RaVyyxBENKXYhlzF23XCJvf+e75U1veK1MmzbFLUdwF1JvznjBFvS7zJsj5371U3LG3w3LL3/yPwj6U+UmfB57ELs59+AZG/LbOOFhctyxx8hFv7tMjj/u4W6mh1IMrHQHhDoUq3UGUJQgm9uhi+ZMwmuIv5XXvPlj8grc1d28mR9mLWEGogLK0jAG6zh9p3U8XnixpFuo4Kv2GbBDrnqCbXyB6t3jqOP3O+v4NU1UNTRBhtlMQGFolaonGXlmhbe8rKBEVVx3SFAargzl7uSGSdKcPmlwlYSAiDRTJw0qm1PxR8QY7LyJxBs1IXm9OIO651K26Y7Gf3/l0/LCl06W8793DoL+FHEz/YDcgzX2vCnjZc6Sh8sJ2Nv+9a9/K6ecckIIeje0A/dSsBNasoM6AmA3ifiS+dQpk0X46zExyO0swF0kDphYl4oPqYi33UQF3VjALzSjwBdUYn5GU8k7dHRFl5RJEOwbMrqmJPX1lJnDLC3RguH1XHprycssHNrCrU6fxg5AJHFA8KzOxFmTqbSlyGjT5BR0Qe+WE/Pwhv6Xz/6YPOWZfy83XXOBHLD7TPyhgm267ccdHwbEwr2PlVNPPVF+9osLPF/j59m2ZCbe/hwlZ3smLq+oi11fuNzVuYNShrtAZ4DTNu7RM6W+qWgW90loRAHfgdezC9pNP/IbyVMV9FFIEbMYHNrTQowU60q8pkEV0xnPDKwU8IbXmNOAyIhG3JrGVI/UrhqyCthO/5Zzo2E8tte4g2EBbnmJODiurIktb/iG/hc/91F52rNeKDdgZ+dABD1fhJiMffq1eP8NO4KyZP9HyuMec6r8+Ce/RD9gjxs+sZlWZZVZu2BCA3WljniwEUsPHJC247FgJrODefHzcDipgPngVCp/CDbFwJZy5Ph+KMRninjWoW569sHNDMLyKTEwRor4QunOE5yyiGljnr7c0lymyCDXWVMmjAOcju3VuQ2+oaCW5kSXcpU1zoya48bLFvxN1CG8xGFv2lubBoti1R8YsBwgpJk9a6ac/ZmPyHP/7h91737htEFZv36b7vyswB3ZFQ8OyW64w3naEx4t3//Bj5SOMkKKioTZYODd1I24w7uJ74vyUV4k3l0NqSdnBKpSoSQ67jvDSmWgvn3DVtm8cZNswLutfAmGF9OCM9rqde4MaaRFXpJSgDOlVFwJJadfCaFcqeeFlvrGwKQ24K2DFDPuSAIiJUt4ETxIYKHJN3U0MYMaQ0z24KBbr/dPmChT5k6XSdOxFsYsyjQ4iO+r+FRiU6oYhss16BGYDPqzPvEBecVr3ix3/WWlLFo0QyZNnSjjpk6QYcjaKONlb3zR4GlPfaL86Me/0BlYnZ7hzbMH0zh8PGnGnBkyiK8B9ONRAKYJE6O1e5OvFDtyZ43vzC/sp4wqEQPHkBe502ePl348cjEdj0NPmz5FBifBb3hpfb/d5+g1jhfdnmUFNpClsUXUOh4RvOIm8qkAq3I7f3nMSMkzkmvgxryWhkrWdFoTw5gfZ1V+1WsNXnKw5Qu7WXGg6Ax0IN8MCkHQxDhp45qZgboJ75quenA1ym7p4tAogeo7b7A2Dzs9OZOo48aNQ7IaH3VSHp7O7JgyaZK+EG68yLcxUSYF1aW29oiOuvERatpnXaHDhGZBBL+qNmvmDDeYI7q/mmIvtsKg9oD3ho/WQDqWHWqdbPzSusE75+x7zFBNSQMpsiMnU3XLBBHhNpCaZLBN5URIXL0yeLrw4EWpOiei76WYs6kC88FRgUMQ+6c2gY7u00MGLccvx6srXo52rGDtAd9VknkkdhwdzBTBYqPrgswR5Y9kpWzJmsyQikCLuAfRCDsMiALHkflmx6DlqLRG4GXmSPTyrKY9lu8Cp9BV6cjQaDvIysnvBCNvkxMRBP18u05QbIezGwdDxKOxyE6L4qARt9fGTJzVsagP+B2pILUZA/7sJHaGdo4Z7S3VNvZspnNTZxDFYixt26F1E9pBxx2qx85gbv1tuZfZ6Hs/+IJ6fsyY2wK87tRTIIRS7UUrR+MO7YfMaO9VXjzzGC1zwnUZYsBgrmtzOA7IdbrzK6BVTwbKrt6IByF555INUnUBxIZ6DrkXWDLoeyE1XNoZ20p7+Bt1sv623DOs5ew6pRDr6w4/pcp0dEFZKtXP8CW0aoUiUrGKlYzgKuVYQdAtUEID1hRh8OCfdRK/maidx3a2gYBtfIGC72pyj5kwprpOJa7d1InpDabEpMfPYLzIJS6/5MtkvJmbPOrtynzryg2MAd5I6CGp2Th4E5opieevdUwfJYBOBQM6CQGuN7mUu15km86BrkTTLHbMWqmO66pRsYzutffGx7mDnUk9eHDa0DnW1hvH3rB5l5I3fO5/YJV84ENnyjg8U7KVjw/grgl3Q44+4nB50d+fAaZOGwY+X8g+67NflFtuuU0mYtuNjw4ff+zReJT2CfrYgXUoc54hfvyTX+D765PlpBOP00cT+CL45ZdfKbcvXSanP+PJ+v1KZ6/DZ6Cf89VvyJVXX4fnXCbJHksW4+nF03V7033h2OH9+oKL5Mtf+w4+rb0LdMJ35RHnD6xaI29946uFD4TZw211HqGr+VWCM886W05/+pOxXVr+Jn1KZ/Zc9LtL9KWQd73jzTo4Cad3tOfYhdBjA3aTPvSRT8oafMt+8pSpeGd2m+y95676FTP6wl1cu75O5YxVndwrMRSJzLZ3FN454OuEuDgvtKko2lGRrmimh806M2dMl3961UsQwBPlve/7mJx68nHyiIcfA4dxQLgBabw5k15y6eXyz695OYJxN7xEsVXO/NTnsKW5VvgVL866A7j76RY5Incuuxt/DGC2I/eGcYAtvXOZwhguqodv++9v/I+sXbde/vPdb8c25EYMjj/JFv4RYCTnJzeDH3nEoXIwXhS/7bbb5X0f+qR86uPvU5xZs2Z43MKfCiC9TivmXWfYJZf9SZ7ypMcbSm3Owcs/2PC9834iF150hZzxnFvxjP8+wV7aobZABm+MXfL7a+SjH3iHzJkzW8+EX/jiV+QLX/qavPqVLw14KoyzHZMzzpXH4GhWGivrc6un7QbP5eZJo+l8DiWBEeu0nnI341P4GNUpu2I4ZjnOurvisdi56JwFC3bR2W7OnJlaDzM2uolzBoNm+rTJ+jgw98wX4bN5//Tql+ufrWdAcM9dHeNt4ZJkEPyZbIDxJtfECe5Gl8EUAYebbrkVj+vuARlTZf4u83AX9rGlb8a7ATgsM7GvzaczOTPvvtsi/aIZP+E3ceJEt/wxR1svgTcDMk0z8YhwqkOKY9cRl1z2e8zUS+TLn/uQ/Pe531E00mqoR31HKbvMmyF77bmH8Lmi+bvMlVNPOUnuvue+lLUL9DEO9oyZOVBVlxqI85o5FPcVavCawTkjUxidmMI8VwZiW0elCpS623jDDvLSmRnBumHDBsxk7kUK3kyxu5sqy+vCN/q5/LF09dXXyuLFC3W9bQPE2sh323b3nIsFHD+Hx2fhmVI7/uFlL5Q3/cu75ac//7Uc/8hj5EQshXbDa4Rp4qML1I2z/1YsGfhxVF3/00jfN8xKT+VGbU5PPEaBT3QMgzZOShcBOLvTXef/6Jfyyn94oSzBmW3NunU4S92FwbZYfaf+8Q5meQW+c/P+D35cZs6aDp8OyVveeLb85bbzIq4NResbokQ6N1CUJzJvvypdEz9NvEJbJNv6jm1FzwfM+gJtoXbl02sNfkZZ64xeg70iIeEd+KmCDjvAImIavh3fpfnUp8/WlyXuvfdeuePOe/UjqURLA5iW2mfwbKbsR6Di8lS50g9MlMV2vj315bP/S26++Va5+ppr5Smnv0RnVL6cwXbTKc63YfCQC02K1K/Oak6Ul6dSlZ8NUuOvu1OK5exh/Sboc+nvr5CXvOhv9fMjc/FoA/8U0Etf/HeQw4vy4g4y+U3AnelH4WlQd4e1H2etPfV5oVfju/Plu81eEDMLsLhvqLPBLY9xWUZiUyXFfCqNzQAVG/krxsZ1u3WbA1fxYnVcOR4xpDKnx4yrfPKG5fBiPr2UB/F8C1+MsJTqRUsnT56ibyydeAL+2AEeieVMzPU8Z10LRKNfsvuueK3vaq0yCJiuvOrPunRiOfYDadfjDDMBS55DsD7np6o/+J63YGb9KVGzqQ/BSHwX6PBEZ2c4ROrED00x8Vl/njXMBuZm/69+/Rt52FGHyM9/8Ws591vflcmTJuPR5gtlHa439JoFS0PDpVWz58yR4457hByEF9sPPHA/eSYu0M/97i/xie7lKqvA1ao71Oke4Igd/NdqgEX0bcXSbBDHZJUwtIZCgTMu7jSCFYfMwwiLtAuwggFL5uQYmpEVN4dyV7xAkCt4JsuXr8RzL8W7oaletPWOpffIYYcdKgux3n/H294gL3rp62TfffbGV8mOCbMwZzym49HpX/n6N7Eb8jns1Jwgv//DH+RX2GH52pc+re0WVMz5+/zZX9El0EkYTNyx+fLXviWvxQW1Juqo/iss5iC7/c57XLvzvJbN44ppHR373rNYdve98otfXQD998Jf8BjCbs8AXkM8Qt+E4k4PB8AdS++U7//w1/KD73wR7/LyLxK65eTEiV+UH5z3IzkD78ByiWY2c+fr0itukPPxh+JmzpwJfYbl0suukFNPOBLPCs11+sW6eO1zGe0I1nqaUCeBVczgHJMAi5CCfDJwE7axCuilGA5QGXjXu971r0XVlwJD1k3tSGCFoAxowjSHlylGX2PATcWbTVxWzMDODRNhcWJtwYK5sivW7LxAZPvDjj4Mf1WPn+PYs5hgPRlfn3v0o06WBx54AFuNf5Y5s2bhdcHX6ANptoRQdwOfvA7GO7ND2Na75s/XyXJ8d/55Z5wuhx92iBtIfg/c9FHd0Cl77bGbcCuyNtGGih1OwfnzZskq/ImeVdhCXIXdI/7Fwf2w+8ILbe5IcTnDSeC4Y4/UawkOMG4rEr7r4kWyEYNkT1zIUhf9RzmInL3x1wofxMNk5LcSf86SE8Lzn/dsPRuRr9pcq3APDTSDPxe3gdBZF6quUAEmRAm6VhO/ETbiG09V/k4B1T8dXR10q/LrHaJBBLLsKdezi3F4wefW5O4GlrURlWUGdbwm9izCmcDqzCkzhxt0SX2AeulGUNoeM8+Utf8zHWq6WG462QBN4UE/L0ODuRJcrpG42r8et6csjYka4ph/XFb0HnxktLQnXsWUA96wapSpA3ch64JTx78rXHcsEAQWuDmZnOEs0MjXOtxoUlnajs6ir5mI14SrQQEcFxzATWZ2x6U4Gr7yxsHkFBj1JdprMWB0FuBGpfqjkupMOH8pPuk4ONIU8IJAFGoGXEo75vVo8FT62PTLCQVyOeBzSL3AmoQZn0hZA411XnFCJCAd8VHTji9625v02/FKjFBC3Lc7oQ8xGkc2oGI9aWrCp/ONp0Y3kSkTe7It7YRZwWuT1aSYq7PNJWDOnFGp74lt1i0JG4tKk+Gj5R87Y1RO6BYm8dmjJ3+ls0mi6xgEPLycMB2tb0dEb4NOiV3Pp6fxWr4l2gIrFz81qAVRl1Lkr846duILpJzSXWh3Ik6dinW+qIObynX8rD3OxyDg46Efsx5luS2yrN2stSBSuNOp88wA2tSKtD5Ka2rJO+uY4ZDVMQvMEHu/0XIlMT9mUAmqsFX8BqKGphoRek2hbda3dYgJvKJbBVAQjEHAF8yaSg06NJG5ttgBVvYBbnEemFQAoaVSiHVK+2c0gVgRtIMAqc49ifHG007lEzsjw6gii/gVYEJofZWA26stymQYpKrk+k8HN67IU9wMuypITzPmLN/cxQdVTg8t5H+jziP2GHsaBjMY2pYJrTIYzNHkMmI/ep0a5SWy0gvRXmSPaIZXAUmwU+ERjRyzlEaNNjXxiDonFjMGUmN2O74c2xiV2SetySONOtgpKPFnFz+q+Ehn1beL4omskcg23+CpISvW5Jn2DKiG2IG72dQFq1FMpRNK2KmjS42jqzRr3qu3WnSJOz8qV6RUAC18W5rVxtSHXkaz/QVjRY90Llqqpa48U8o2OrzjlpIkdbZXDHV33BLM2qoamvJIsEfcPy18EzFFdaR0BYdQMt0rrqQMawzYoytUZNSx64zoGbToqc1psHoZjaSNfnaUOVVLPBt5lB1Qois3aW1sbzyVBFB0zpQSUlThIOJt4N4TpYyEriSJTk07tITgK3V4vZqb4z0KmPnAPO7UKd9W74V9zKcXuoD7EPsj6JEUymt4KplL0QgzR+TQyrAMZsSnjMvayIKdlHVqs61z6hLsZFaHlzFXZTfaTIwO2md4qLgIblyYW7mn+UaVLQ4lPgW4e6nOH9059IYZ+SJL6PUpB3ydklEnB2dmubYAIz7ErBOXbTODLG8R9VA2q12mZ2JzVa/ECzkHZ3goWgYe889tzcXttWXTvRbhr6yB+rb4wmaBcsC32JF0TQu2a67QRB0aFSu8Km1mkOUVitEDKrqOkKUGGvXMBE6rjFaEqlKtJLEeFcdmJp46H8d8qmp0grTq2sSlTn6dvhle3QMewsxXvShtNEE2iHuhD3Q7oVDRdaQyrQMsj/iMmYweeJa2ITPOz54JcorCHpJnWARtsrysNYohA/U0KWT8WadLHbx7wEfCcr4IBnQojJi+ZoTXGWeqlNpreBhuU04+JV5NyG1tTXo0tbXxtfaIR6u/o7418jpDyauWH2SWBldg5im8nJIPM7Jr+Qd+RaEOt27gdQ/4QkbnUsmwjlS1NOzAjHPIts5oE1lqr+FhuJU8CZwSL4+c6pzWKzwJaNIjauvEywREujbyN/wuecyzDr8Vp2xF1YeAVIEqrUxZVaAusOvs36EBX2OD09oaE2cZuGIagqBivNFaXiEaA0AUfOSWVFVAqnNar+jt1aqD++Ys77gtLiuvoFyqATAzoBK9p63oRHibf02u5THjlrKTh2NFsCNsVBuN+TNKWWiMs0MDviw2qZmBcJIVE4xKtWq8p+zF0RETR91VulOnre8rSgMQiSw1l+AZxl01o/nKK8OjJDBX8UrYTFnSyfAb/NtVR2OV5ll5KZLVU/u6CCdNRDdmAV8rOxJmeltuNL0ZbdTMWyhzsk1ooG7hEYsL5YQmJyfgUlCCD1BQwzfFs5CRVqmsxfE0HoF9CExrifAzIG2tg0ekTcVGHesIg8IxQsQpKpb6ONgX07WUQUN2ZmY+4LMKNTMu9nASvAYlS3YlZLVV05wI5J0yMd2Z+/ZAQtwUv1ZQU0Pg6JBiG2P+Ji+jZ0DzrEI9EctmHQyxDBqBeh1NwqKothHE7ebHgtqVYpy0La3X8YhsCZ6M+QYgGZYqqYTmeiTf2OcDPlIocDSKAEChBBuhYpFSMWstN7UZckVsBFD6ZChGzcYim3eRDcIKuxjAstUtL/ksK7kEJLouN0r6GLMItdRewEuYrMTyU5oYOYoBBTtFCnsKEQ2lmGEeLahj8lKdQBZzCeVAmOerUOMZoUTP0pBDYKelEk+rFCgRG0dpKKWGnVGhkzLGud6tUbiDXqTM2VQH78Byp6D8teu3U5xQIySa4cuBUeloNhtKZhSmH3YwdCPJyW9qy+HXwjLB7njjWDGklkuloTNpxh8VZiMEdNYh4l9LE+tZh0R4XVsk46+maLpanlEs3haJAj6DWQeqDbCCwPzWoMcO8yuDvSI37uxCzeZSDU2Fd8YfdYwrtAliOgmkdaLHHZiQF9Wc7rGenrFmMS4BOaHkTDwa0GYEcVtSnYhaslhHQ4r1MIYxzOPFi9poSWNcuueUkeHfnUGKCaN4gTamPFMZWocEfovanJTFiYBUqA2XHRIHVEReW2zlm0PIwWoltDek7EZiR7uUWowxj6FaSa6hdobX/tVRRY/kU31LHl+hyjPT7h1d4lmqZGhyoDr+MW4vwU66tmBXnAxSmy4ZkljNvOBWojKLSi1xasquadC22VOR1Q5ItGknGCVGbcCrImp84pFejU4sSvebA/eco0Nj2coYHJcVK8PHbqoYlwyKNdXnsR1xuZ6i9xm/iddo2kr6VjyW51yi8Sg5x+VgeY5VaK+xVOXQHeLtyQZ8KUCoVGx8rwbSv5FhJVZs6q5ywIxp4nJASArpmrcLTcKiPNl2jJkKjwRQYpNTKvKbkZKmRGcNuTzwDIUCS/s1Azf+XYVkdCyEJKUSLmRnYqmrWHLuBdeQ69fwplxGqcSMcpV0MY3ygWp12tHndW1lzju8RjXyIdAiOrW5Dp1+Mb/W4exg+Iht7FEvTpp2Nu8scyfEQn3A92jgSNE7OyMVEAdOPMACXuG93mQUdIHVX0GhNxvcHNJl8PbKdyxdYbLjwTGW/HO8RhTwpmiO4ZjAmmKuqa1OeNcZuIa+zt46eA2bv2rwjrRlR/Kuc2qdzOwavo6JwdtmjnjyNRrNcw1tzEgY49CShhRffwRx2TNAA5OkKRYfN9XBY5yxKu9oWWPJP973pv2j4R36MHVkDVPr/5rm/28MAChNrXY+vAnVAAAAAElFTkSuQmCC"
+                }
+              },
+              "frame": {},
+              "style": {}
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 2,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "9fd0d126",
+            "multilineTextboxSpec": {
+              "lines": [
+                "<span style=\"font-size: 14px;font-weight: 700;\">KPI Trust Lab is a data consulting company specializing in modern data platforms and analytics solutions, with a focus on Databricks and other data-related technologies. </span>\n",
+                "\n",
+                "<span style=\"font-size: 14px;font-weight: 700;\">We help organizations transform complex, fragmented data into reliable, actionable insights by improving data quality, building scalable data pipelines, developing analytics solutions, and connecting technical data systems to business needs. Our goal is to help businesses build trust in their data so they can make faster, more informed decisions.</span>"
+              ],
+              "verticalAlign": "VERTICAL_ALIGN_CENTER"
+            }
+          },
+          "position": {
+            "x": 2,
+            "y": 0,
+            "width": 10,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "fa373e70",
+            "multilineTextboxSpec": {
+              "lines": [
+                "## Our Solution & Recommendation"
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 31,
+            "width": 12,
+            "height": 1
+          }
+        },
+        {
+          "widget": {
+            "name": "0b178241",
+            "multilineTextboxSpec": {
+              "lines": [
+                "## One certified definition for each enterprise KPI\n",
+                "\n",
+                "Establish one certified enterprise definition for each KPI in Unity Catalog, while retaining departmental measures under precise business names.\n",
+                "\n",
+                "Implementation:\n",
+                "\n",
+                "1. Define once: Encode certified calculations in Unity Catalog metric views.\n",
+                "2. Reuse consistently: Use the same measures across AI/BI dashboards and Genie.\n",
+                "3. Govern transparently: Document the owner, business rule, time basis, source and certification status.\n",
+                "\n",
+                "The objective is not to eliminate departmental metrics. It is to stop different business concepts from being presented under the same KPI name."
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 32,
+            "width": 12,
+            "height": 4
+          }
+        },
+        {
+          "widget": {
+            "name": "ccb1af5a",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "fad611d4",
+                  "fields": [
+                    {
+                      "name": "reporting_month",
+                      "expression": "`reporting_month`"
+                    },
+                    {
+                      "name": "recognized_subscription_revenue",
+                      "expression": "`recognized_subscription_revenue`"
+                    }
+                  ],
+                  "disaggregated": true,
+                  "orders": [
+                    {
+                      "direction": "DESC",
+                      "expression": "`reporting_month`"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "<span style=\"color:#2E86C1;\">Recognized Subscription Revenue</span>",
+                  "fields": []
+                }
+              },
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "recognized_subscription_revenue",
+                  "format": {
+                    "type": "number-currency",
+                    "currencyCode": "USD",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "exact",
+                      "places": 1
+                    }
+                  }
+                },
+                "period": {
+                  "fieldName": "reporting_month",
+                  "hideLabels": true
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 36,
+            "width": 4,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "65ea17c5",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "8324074e",
+                  "fields": [
+                    {
+                      "name": "reporting_month",
+                      "expression": "`reporting_month`"
+                    },
+                    {
+                      "name": "paying_and_engaged_customers",
+                      "expression": "`paying_and_engaged_customers`"
+                    }
+                  ],
+                  "disaggregated": true,
+                  "orders": [
+                    {
+                      "direction": "DESC",
+                      "expression": "`reporting_month`"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "<span style=\"color:#2E86C1;\">Paying and Engaged Customers</span>",
+                  "fields": []
+                }
+              },
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "paying_and_engaged_customers",
+                  "format": {
+                    "type": "number-plain",
+                    "abbreviation": "none",
+                    "decimalPlaces": {
+                      "type": "exact",
+                      "places": 0
+                    }
+                  }
+                },
+                "period": {
+                  "fieldName": "reporting_month",
+                  "hideLabels": true
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 4,
+            "y": 36,
+            "width": 4,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "d37cd9fe",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "6291108f",
+                  "fields": [
+                    {
+                      "name": "reporting_month",
+                      "expression": "`reporting_month`"
+                    },
+                    {
+                      "name": "conversion_rate",
+                      "expression": "`conversion_rate`"
+                    }
+                  ],
+                  "disaggregated": true,
+                  "orders": [
+                    {
+                      "direction": "DESC",
+                      "expression": "`reporting_month`"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "<span style=\"color:#2E86C1;\">Qualified Lead-to-Customer Conversion</span>",
+                  "fields": []
+                }
+              },
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "conversion_rate",
+                  "format": {
+                    "type": "number-percent",
+                    "decimalPlaces": {
+                      "type": "exact",
+                      "places": 1
+                    }
+                  }
+                },
+                "period": {
+                  "fieldName": "reporting_month",
+                  "hideLabels": true
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 8,
+            "y": 36,
+            "width": 4,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "a674aada",
+            "multilineTextboxSpec": {
+              "lines": [
+                "Active contracted monthly recurring value, net of refunds allocated to July."
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 39,
+            "width": 4,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "9aea15a3",
+            "multilineTextboxSpec": {
+              "lines": [
+                "Active paid subscription plus at least one product session in the trailing 60 days."
+              ]
+            }
+          },
+          "position": {
+            "x": 4,
+            "y": 39,
+            "width": 4,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "7ddd5caa",
+            "multilineTextboxSpec": {
+              "lines": [
+                "Qualified July cohort leads that became customers divided by all qualified July cohort leads."
+              ]
+            }
+          },
+          "position": {
+            "x": 8,
+            "y": 39,
+            "width": 4,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "8e30e5d9",
+            "multilineTextboxSpec": {
+              "lines": [
+                "<span style=\"font-weight: 700;\">Finding:</span><br>Each department interprets “active” differently. Some definitions measure payment, some measure CRM status and others measure product engagement.\n",
+                "\n",
+                "<br><span style=\"font-weight: 700;\">Definitions found:</span>\n",
+                "\n",
+                "- Finance: Customer with a paid invoice in the trailing 90 days\n",
+                "- Sales: Customer with an Active or Trial CRM status\n",
+                "- Product: Customer with at least three sessions during the month\n",
+                "- Governed: Active paid subscription and recent product engagement<br>\n",
+                "\n",
+                "<span style=\"font-weight: 700;\">Recommended enterprise definition:</span><br>Paying and engaged customer: a customer with an active paid subscription and at least one product session during the trailing 60 days.\n",
+                "\n",
+                "<span style=\"font-weight: 700;\">Why this definition:</span><br>It combines commercial activity with actual product engagement, reducing the risk of counting expired, trial or non-using customers as active."
+              ]
+            }
+          },
+          "position": {
+            "x": 4,
+            "y": 16,
+            "width": 8,
+            "height": 7
+          }
+        },
+        {
+          "widget": {
+            "name": "e7afa3ef",
+            "multilineTextboxSpec": {
+              "lines": [
+                "<span style=\"font-weight: 700;\">Finding:</span><br>The departments use different funnel stages, populations and denominators. Therefore, the percentages answer different business questions.<br>\n",
+                "\n",
+                "<span style=\"font-weight: 700;\">Definitions found:</span>\n",
+                "\n",
+                "- Sales: Closed-won opportunities divided by closed opportunities\n",
+                "- Marketing: MQLs that generated an opportunity divided by all MQLs\n",
+                "- Executive: Customers acquired divided by all leads\n",
+                "- Governed: Qualified leads becoming customers divided by all qualified leads in the reporting cohort<br>\n",
+                "\n",
+                "<span style=\"font-weight: 700;\">Recommended enterprise definition:</span><br>Qualified lead-to-customer conversion: qualified leads associated with a closed-won opportunity divided by all qualified leads in the reporting cohort.\n",
+                "\n",
+                "<span style=\"font-weight: 700;\">Why this definition:</span><br>It evaluates conversion from a consistent point in the funnel while controlling for qualification status and cohort period."
+              ]
+            }
+          },
+          "position": {
+            "x": 4,
+            "y": 24,
+            "width": 8,
+            "height": 7
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    }
+  ],
+  "uiSettings": {
+    "theme": {
+      "widgetHeaderAlignment": "ALIGNMENT_UNSPECIFIED"
+    },
+    "genieSpace": {
+      "isEnabled": true,
+      "overrideId": "01f1bb758051197e9a36581731e563b3",
+      "enablementMode": "ENABLED"
+    },
+    "applyModeEnabled": false
+  }
+}
