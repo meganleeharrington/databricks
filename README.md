@@ -31,7 +31,7 @@ The objective is not to eliminate department-specific measures. It is to label t
 - **Git-integrated development:** Source data, notebooks, documentation, and the dashboard are managed through a GitHub repository connected to a Databricks Git folder
 - **Python ingestion:** Raw CSV files are loaded from the repository and written as managed Delta tables
 - **Data validation:** Row counts, data types, table relationships, and expected KPI results are tested before the reporting layer is created
-- **Departmental KPI views:** Finance, Sales, Product, Marketing, and Executive definitions are calculated separately
+- **KPI views:** Finance, Sales, Product, Marketing, and Executive definitions are calculated separately across three departments
 - **KPI reconciliation:** Calculated results are compared with reference values to identify discrepancies
 - **Governed metrics:** Certified enterprise measures are defined through Unity Catalog metric views
 - **AI/BI dashboard:** Departmental results, findings, and recommended enterprise definitions are presented as a consulting assessment
